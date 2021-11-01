@@ -86,7 +86,7 @@ export const board= {
         startRampMesh.receiveShadow = true;
         groupMesh.add(startRampMesh);
 
-        //RAMP on the right
+        //RAMP on top right
         let diagonalRampShape = this.createThreeShape(5, 94.2);
         let diagonalRampExtrudeSettings = {steps: 1,depth: 14,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
         let diagonalRampGeo = new THREE.ExtrudeGeometry( diagonalRampShape, diagonalRampExtrudeSettings);
@@ -99,6 +99,10 @@ export const board= {
         diagonalRampMesh.receiveShadow = true;
         groupMesh.add(diagonalRampMesh);
         /*************End: No ammos.*************************************/
+
+        /******ACTIVATE WHEN BOARD IS FINISHED*******/
+        //groupMesh.rotation.x = Math.PI/2;
+
 
         //AMMO: frame
         let compoundShape = new Ammo.btCompoundShape();
@@ -161,6 +165,13 @@ export const board= {
     let boxMesh = new THREE.Mesh(boxGeo, material);
     return boxMesh
     },
+
+    makeCylinderMesh(radiusTop, radiusBottom, height, radialSegments, heightegments, openEnded, thetaStart, thetaLength, material){
+        let cylinderGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments,heightegments,openEnded,thetaStart, thetaLength);
+        let cylinderMesh = new THREE.Mesh(cylinderGeometry, material);
+        return cylinderMesh;
+    },
+
 
 
 
