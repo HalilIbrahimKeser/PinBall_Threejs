@@ -1,0 +1,164 @@
+import * as THREE from "../../../PinBall/lib/three/build/three.module.js";
+import {commons} from "../../../PinBall/lib/ammohelpers/lib/Common.js";
+
+/**
+ * MERK1: Her brukes BoxGeometry, altså et volum, som plan.
+ * MERK2: Bruker btBvhTriangleMeshShape (og ikke btBvhConvexTriangleMeshShape) til planet.
+ */
+export const board= {
+    myPhysicsWorld: undefined,
+    gameBoardRigidBody: undefined,
+    bottomBoardRigidBody: undefined,
+    TERRAIN_SIZE: 100,
+
+
+
+    init(myPhysicsWorld) {
+        this.myPhysicsWorld = myPhysicsWorld;
+    },
+
+    create(setCollisionMask=true) {
+        const position = {x:0, y:0, z:0};
+        const mass = 0;
+
+        //THREE, bruker Shape og ExtrudeGeometry:
+        let groupMesh = new THREE.Group();
+        groupMesh.userData.tag = 'gameboard';
+        groupMesh.userData.name = 'terrain';
+        groupMesh.position.set(position.x, position.y, position.z);
+        let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let hole1 = new THREE.Shape();
+        hole1.moveTo( 5,5 );
+        hole1.lineTo( 5, this.TERRAIN_SIZE * 3 -5 );
+        hole1.lineTo( this.TERRAIN_SIZE * 2-5, this.TERRAIN_SIZE * 3-5 );
+        hole1.lineTo( this.TERRAIN_SIZE * 2-5, 5 );
+        hole1.lineTo( 5, 5 );
+        frameShape.holes.push(hole1);
+        let frameExtrudeSettings = {steps: 1,depth: 15,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
+        let frameBoardGeometry = new THREE.ExtrudeGeometry( frameShape, frameExtrudeSettings );
+        let gameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
+        let frameBoardMesh = new THREE.Mesh( frameBoardGeometry, gameBoardMaterial );
+        frameBoardMesh.rotation.x = -Math.PI / 2;
+        frameBoardMesh.position.x = -this.TERRAIN_SIZE;
+        frameBoardMesh.position.z = this.TERRAIN_SIZE;
+        frameBoardMesh.receiveShadow = true;
+        groupMesh.add( frameBoardMesh );
+
+        let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let bottomExtrudeSettings = {steps: 1,depth: 5,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
+        let bottomBoardGeometry = new THREE.ExtrudeGeometry( bottomBoardShape, bottomExtrudeSettings );
+        let bottomBoardMesh = new THREE.Mesh(bottomBoardGeometry, gameBoardMaterial);
+        bottomBoardMesh.rotation.x = -Math.PI / 2;
+        bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
+        bottomBoardMesh.position.z = this.TERRAIN_SIZE;
+        bottomBoardMesh.receiveShadow = true;
+        groupMesh.add( bottomBoardMesh );
+
+
+        //AMMO: frame
+        let compoundShape = new Ammo.btCompoundShape();
+        commons.createTriangleShapeAddToCompound(compoundShape, frameBoardMesh);
+        this.gameBoardRigidBody = commons.createAmmoRigidBody(compoundShape, groupMesh, 0.05, 0.3, position, mass);
+        // BODYFLAG_KINEMATIC_OBJECT = 2 betyr kinematic object, masse=0 men kan flyttes!!
+        this.gameBoardRigidBody.setCollisionFlags(this.gameBoardRigidBody.getCollisionFlags() | 2);
+        // Never sleep, BODYSTATE_DISABLE_DEACTIVATION = 4
+        this.gameBoardRigidBody.setActivationState(4);
+
+        this.myPhysicsWorld.addPhysicsObject(
+            this.gameBoardRigidBody,
+            groupMesh,
+            setCollisionMask,
+            this.myPhysicsWorld.COLLISION_GROUP_PLANE,
+            this.myPhysicsWorld.COLLISION_GROUP_SPHERE |
+            this.myPhysicsWorld.COLLISION_GROUP_COMPOUND |
+            this.myPhysicsWorld.COLLISION_GROUP_MOVEABLE |
+            this.myPhysicsWorld.COLLISION_GROUP_CONVEX |
+            this.myPhysicsWorld.COLLISION_GROUP_TRIANGLE
+        );
+
+        //AMMO: bottom
+        let bottomCompoundShape = new Ammo.btCompoundShape();
+        commons.createTriangleShapeAddToCompound(bottomCompoundShape, bottomBoardMesh);
+        this.bottomBoardRigidBody = commons.createAmmoRigidBody(bottomCompoundShape, groupMesh, 0.05, 0.3, position, mass);
+        // BODYFLAG_KINEMATIC_OBJECT = 2 betyr kinematic object, masse=0 men kan flyttes!!
+        this.bottomBoardRigidBody.setCollisionFlags(this.bottomBoardRigidBody.getCollisionFlags() | 2);
+        // Never sleep, BODYSTATE_DISABLE_DEACTIVATION = 4
+        this.bottomBoardRigidBody.setActivationState(4);
+
+        this.myPhysicsWorld.addPhysicsObject(
+            this.bottomBoardRigidBody,
+            groupMesh,
+            setCollisionMask,
+            this.myPhysicsWorld.COLLISION_GROUP_PLANE,
+            this.myPhysicsWorld.COLLISION_GROUP_SPHERE |
+            this.myPhysicsWorld.COLLISION_GROUP_COMPOUND |
+            this.myPhysicsWorld.COLLISION_GROUP_MOVEABLE |
+            this.myPhysicsWorld.COLLISION_GROUP_CONVEX |
+            this.myPhysicsWorld.COLLISION_GROUP_TRIANGLE
+        );
+
+    },
+
+    createThreeShape(length, width) {
+        //let length = this.TERRAIN_SIZE * 2;
+        //let width = this.TERRAIN_SIZE * 3;
+        let shape = new THREE.Shape();
+        shape.moveTo( 0,0 );
+        shape.lineTo( 0, width );
+        shape.lineTo( length, width );
+        shape.lineTo( length, 0 );
+        shape.lineTo( 0, 0 );
+        return shape;
+    },
+
+    makeSimpleBoxMesh(width, height, depth, material){
+    let boxGeo = new THREE.BoxGeometry(width, height, depth);
+    let boxMesh = new THREE.Mesh(boxGeo, material);
+    return boxMesh
+    },
+
+
+
+    // axisNo: 1=x, 2=y, 3=z
+    tilt(axisNo, angle) {
+        //this.terrainRigidBody.activate(true);
+        let axis;
+        switch (axisNo) {
+            case 1:
+                axis = new THREE.Vector3( 1, 0, 0 );
+                break;
+            case 2:
+                axis = new THREE.Vector3( 0,1, 0);
+                break;
+            case 3:
+                axis = new THREE.Vector3( 0,0, 1);
+                break;
+            default:
+                axis = new THREE.Vector3( 1, 0, 0 );
+        }
+        // Henter gjeldende transformasjon:
+        let terrainTransform = new Ammo.btTransform();
+        let terrainMotionState = this.gameBoardRigidBody.getMotionState();
+        terrainMotionState.getWorldTransform( terrainTransform );
+        let ammoRotation = terrainTransform.getRotation();
+
+        let terrainMotionState2 = this.bottomBoardRigidBody.getMotionState();
+        terrainMotionState2.getWorldTransform( terrainTransform );
+
+
+        // Roter gameBoardRigidBody om en av aksene (bruker Three.Quaternion til dette):
+        let threeCurrentQuat = new THREE.Quaternion(ammoRotation.x(), ammoRotation.y(), ammoRotation.z(), ammoRotation.w());
+        let threeNewQuat = new THREE.Quaternion();
+        threeNewQuat.setFromAxisAngle(axis, this.toRadians(angle));
+        // Slår sammen eksisterende rotasjon med ny/tillegg.
+        let resultQuaternion = threeCurrentQuat.multiply(threeNewQuat);
+        // Setter ny rotasjon på ammo-objektet:
+        terrainTransform.setRotation( new Ammo.btQuaternion( resultQuaternion.x, resultQuaternion.y, resultQuaternion.z, resultQuaternion.w ) );
+        terrainMotionState.setWorldTransform(terrainTransform);
+        terrainMotionState2.setWorldTransform(terrainTransform);
+    },
+
+    toRadians(angle) {
+        return angle/(2*Math.PI);
+    }
+}
