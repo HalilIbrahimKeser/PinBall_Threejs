@@ -26,6 +26,8 @@ export const board= {
         groupMesh.userData.tag = 'gameboard';
         groupMesh.userData.name = 'terrain';
         groupMesh.position.set(position.x, position.y, position.z);
+
+        //FRAME
         let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
         let hole1 = new THREE.Shape();
         hole1.moveTo( 5,5 );
@@ -36,23 +38,50 @@ export const board= {
         frameShape.holes.push(hole1);
         let frameExtrudeSettings = {steps: 1,depth: 15,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
         let frameBoardGeometry = new THREE.ExtrudeGeometry( frameShape, frameExtrudeSettings );
-        let gameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
-        let frameBoardMesh = new THREE.Mesh( frameBoardGeometry, gameBoardMaterial );
+        let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
+        let frameBoardMesh = new THREE.Mesh( frameBoardGeometry, frameBoardMaterial );
         frameBoardMesh.rotation.x = -Math.PI / 2;
         frameBoardMesh.position.x = -this.TERRAIN_SIZE;
         frameBoardMesh.position.z = this.TERRAIN_SIZE;
         frameBoardMesh.receiveShadow = true;
         groupMesh.add( frameBoardMesh );
 
+        //BOTTOM
         let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
         let bottomExtrudeSettings = {steps: 1,depth: 5,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
         let bottomBoardGeometry = new THREE.ExtrudeGeometry( bottomBoardShape, bottomExtrudeSettings );
-        let bottomBoardMesh = new THREE.Mesh(bottomBoardGeometry, gameBoardMaterial);
+        let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
+        let bottomBoardMesh = new THREE.Mesh(bottomBoardGeometry, bottomBoardMaterial);
         bottomBoardMesh.rotation.x = -Math.PI / 2;
         bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
         bottomBoardMesh.position.z = this.TERRAIN_SIZE;
         bottomBoardMesh.receiveShadow = true;
         groupMesh.add( bottomBoardMesh );
+
+        //RAMP on the right
+        let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3 -70);
+        let startRampExtrudeSettings = {steps: 1,depth: 15,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
+        let startRampGeo = new THREE.ExtrudeGeometry( startRampShape, startRampExtrudeSettings);
+        let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
+        let startRampMesh = new THREE.Mesh(startRampGeo, startRampMaterial);
+        startRampMesh.rotation.x = -Math.PI / 2;
+        startRampMesh.position.x = this.TERRAIN_SIZE - 30;
+        startRampMesh.position.z = this.TERRAIN_SIZE - 5;
+        startRampMesh.receiveShadow = true;
+        groupMesh.add(startRampMesh);
+
+        //RAMP on the right
+        let diagonalRampShape = this.createThreeShape(5, 94.2);
+        let diagonalRampExtrudeSettings = {steps: 1,depth: 14,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
+        let diagonalRampGeo = new THREE.ExtrudeGeometry( diagonalRampShape, diagonalRampExtrudeSettings);
+        let diagonalRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF5571F, side: THREE.DoubleSide } );
+        let diagonalRampMesh = new THREE.Mesh(diagonalRampGeo, diagonalRampMaterial);
+        diagonalRampMesh.rotation.x = -Math.PI / 2;
+        diagonalRampMesh.rotation.z = 1.05;
+        diagonalRampMesh.position.x = this.TERRAIN_SIZE -2.3;
+        diagonalRampMesh.position.z = -this.TERRAIN_SIZE - 50;
+        diagonalRampMesh.receiveShadow = true;
+        groupMesh.add(diagonalRampMesh);
 
 
         //AMMO: frame
