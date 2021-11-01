@@ -58,6 +58,22 @@ export const board= {
         bottomBoardMesh.receiveShadow = true;
         groupMesh.add( bottomBoardMesh );
 
+        /**************Start: No Ammos Yet!********************************/
+            //GLASS COVER; Ingen AMMO, dvs ballen kan komme gjennom
+        let coverBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let coverExtrudeSettings = {steps: 1,depth: 0.3, bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
+        let coverBoardGeometry = new THREE.ExtrudeGeometry( coverBoardShape, coverExtrudeSettings );
+        let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x510082, side: THREE.DoubleSide } );
+        coverBoardMaterial.transparent = true;
+        coverBoardMaterial.opacity = 0.2;
+        let coverBoardMesh = new THREE.Mesh(coverBoardGeometry, coverBoardMaterial);
+        coverBoardMesh.rotation.x = -Math.PI / 2;
+        coverBoardMesh.position.x = -this.TERRAIN_SIZE;
+        coverBoardMesh.position.z = this.TERRAIN_SIZE;
+        coverBoardMesh.position.y = 16;
+        coverBoardMesh.receiveShadow = true;
+        groupMesh.add( coverBoardMesh );
+
         //RAMP on the right
         let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3 -70);
         let startRampExtrudeSettings = {steps: 1,depth: 15,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelOffset: 0,bevelSegments: 1};
@@ -82,7 +98,7 @@ export const board= {
         diagonalRampMesh.position.z = -this.TERRAIN_SIZE - 50;
         diagonalRampMesh.receiveShadow = true;
         groupMesh.add(diagonalRampMesh);
-
+        /*************End: No ammos.*************************************/
 
         //AMMO: frame
         let compoundShape = new Ammo.btCompoundShape();
