@@ -14,6 +14,10 @@ export const board= {
     coverBoardRigidBody: undefined,
     startRampRigidBody: undefined,
     diagonalBarBody: undefined,
+    upperLeftConcaveBody: undefined,
+    upperRightConcaveBody: undefined,
+    lowerLeftConcaveBody: undefined,
+    lowerRightConcaveBody: undefined,
 
     TERRAIN_SIZE: 100,
 
@@ -39,7 +43,9 @@ export const board= {
         hole1.lineTo( this.TERRAIN_SIZE * 2-5, 5 );
         hole1.lineTo( 5, 5 );
         let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
-        let frameBoardMesh = this.createExtrudeMesh(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3, 1, 15, true, 1, 1,0,1,frameBoardMaterial, hole1);
+        let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        frameShape.holes.push(hole1);
+        let frameBoardMesh = this.createExtrudeMesh(frameShape, 1, 15, true, 1, 1,0,1,frameBoardMaterial);
         frameBoardMesh.rotation.x = -Math.PI / 2;
         frameBoardMesh.position.x = -this.TERRAIN_SIZE;
         frameBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -48,7 +54,8 @@ export const board= {
 
         //BOTTOM
         let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
-        let bottomBoardMesh = this.createExtrudeMesh(this.TERRAIN_SIZE*2,this.TERRAIN_SIZE*3, 1, 5, true, 1,1, 0, 1, bottomBoardMaterial);
+        let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 5, true, 1,1, 0, 1, bottomBoardMaterial);
         bottomBoardMesh.rotation.x = -Math.PI / 2;
         bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
         bottomBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -60,7 +67,8 @@ export const board= {
         let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
         coverBoardMaterial.transparent = true;
         coverBoardMaterial.opacity = 0.1;
-        let coverBoardMesh = this.createExtrudeMesh(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3, 1, 0.3, true, 1, 1, 0, 1, coverBoardMaterial);
+        let coverShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let coverBoardMesh = this.createExtrudeMesh(coverShape, 1, 0.3, true, 1, 1, 0, 1, coverBoardMaterial);
         coverBoardMesh.rotation.x = -Math.PI / 2;
         coverBoardMesh.position.x = -this.TERRAIN_SIZE;
         coverBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -70,36 +78,85 @@ export const board= {
 
         //RAMP on the right
         let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
-        let startRampMesh = this.createExtrudeMesh(10, this.TERRAIN_SIZE*3-70, 1, 15, true, 1,1,0, 1, startRampMaterial);
+        let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3-75);
+        let startRampMesh = this.createExtrudeMesh(startRampShape, 1, 15, true, 1,1,0, 1, startRampMaterial);
         startRampMesh.rotation.x = -Math.PI / 2;
         startRampMesh.position.x = this.TERRAIN_SIZE - 25;
         startRampMesh.position.z = this.TERRAIN_SIZE - 5;
         startRampMesh.receiveShadow = true;
         groupMesh.add(startRampMesh);
 
-        //RAMP on top right
-        let diagonalRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF5571F, side: THREE.DoubleSide } );
-        let diagonalRampMesh = this.createExtrudeMesh(5, 94.2, 1,14,true, 1, 1, 0,1, diagonalRampMaterial);
-        diagonalRampMesh.rotation.x = -Math.PI / 2;
-        diagonalRampMesh.rotation.z = 1.05;
-        diagonalRampMesh.position.x = this.TERRAIN_SIZE -2.3;
-        diagonalRampMesh.position.z = -this.TERRAIN_SIZE - 50;
-        diagonalRampMesh.receiveShadow = true;
-        groupMesh.add(diagonalRampMesh);
+        //Top right Corner
+        let concaveShape = this.createConcaveShape();
+        let upperRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, frameBoardMaterial);
+        upperRightConcaveMesh.scale.x = 15;
+        upperRightConcaveMesh.scale.y = 15;
+        upperRightConcaveMesh.rotation.x = -Math.PI / 2;
+        upperRightConcaveMesh.rotation.z = 2.35;
+        upperRightConcaveMesh.position.z =  -160;
+        upperRightConcaveMesh.position.x =  62;
+        upperRightConcaveMesh.receiveShadow = true;
+        groupMesh.add(upperRightConcaveMesh);
 
+        //Top left corner
+        let upperLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, frameBoardMaterial);
+        upperLeftConcaveMesh.scale.x = 15;
+        upperLeftConcaveMesh.scale.y = 15;
+        upperLeftConcaveMesh.rotation.x = -Math.PI / 2;
+        upperLeftConcaveMesh.rotation.z = -2.35;
+        upperLeftConcaveMesh.position.z =  -160;
+        upperLeftConcaveMesh.position.x =  -62;
+        upperLeftConcaveMesh.receiveShadow = true;
+        groupMesh.add(upperLeftConcaveMesh);
+
+        // lower boundaries
+        let concaveMaterial = new THREE.MeshPhongMaterial( { color: 0x6735e5, side: THREE.DoubleSide } );
+        let lowerLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
+        lowerLeftConcaveMesh.scale.x = 13;
+        lowerLeftConcaveMesh.scale.y = 9;
+        lowerLeftConcaveMesh.rotation.x = -Math.PI / 2;
+        lowerLeftConcaveMesh.rotation.z = 0.78;
+        lowerLeftConcaveMesh.position.z =  55;
+        lowerLeftConcaveMesh.position.x =  33;
+        lowerLeftConcaveMesh.receiveShadow = true;
+        groupMesh.add(lowerLeftConcaveMesh);
+
+        let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
+        lowerRightConcaveMesh.scale.x = 13;
+        lowerRightConcaveMesh.scale.y = 9;
+        lowerRightConcaveMesh.rotation.x = -Math.PI / 2;
+        lowerRightConcaveMesh.rotation.z = -0.78;
+        lowerRightConcaveMesh.position.z =  55;
+        lowerRightConcaveMesh.position.x =  -55;
+        lowerRightConcaveMesh.receiveShadow = true;
+        groupMesh.add(lowerRightConcaveMesh);
+
+        /***********Start: Shape example codes, NO AMMOS***********************/
         //Cylinder (makeCylinderMesh example)
         let hinderMaterial1 = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
         let hinderMesh1 = this.makeCylinderMesh(5, 5, 15, 50, 1, false, 0, 6.3, hinderMaterial1);
         hinderMesh1.position.y = 7;
+        hinderMesh1.position.z = -70;
+        hinderMesh1.position.x = -40;
         groupMesh.add(hinderMesh1);
 
         //Box (makeSimpleBoxMesh example)
         let hinderMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
         let hinderMesh2 = this.makeSimpleBoxMesh(10, 15, 10, hinderMaterial2);
         hinderMesh2.position.y = 7;
-        hinderMesh2.position.x = 50;
-        hinderMesh2.position.z = -50;
+        hinderMesh2.position.x = 40;
+        hinderMesh2.position.z = -70;
         groupMesh.add(hinderMesh2);
+
+        //Heart example
+        let heartShape = this.createHeartShape();
+        let heartMesh = this.createExtrudeMesh(heartShape, 1, 15, false, 0.1, 1, 0, 1, startRampMaterial);
+        heartMesh.rotation.x = -Math.PI/2;
+        heartMesh.rotation.z = -Math.PI;
+        heartMesh.scale.x = 0.2;
+        heartMesh.scale.y = 0.2;
+        groupMesh.add(heartMesh);
+        /***********END: Shape example codes, NO AMMOS***********************/
 
         //Rotate board slightly for downward pull on the ball
         groupMesh.rotation.x = 0.2;
@@ -113,8 +170,15 @@ export const board= {
         this.addAmmo(coverBoardMesh, this.coverBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo Ramp
         this.addAmmo(startRampMesh, this.startRampRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //PhysicsAmmo diagonalBar
-        this.addAmmo(diagonalRampMesh, this.diagonalBarBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //Top right ammo
+        this.addAmmo(upperRightConcaveMesh, this.upperRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //Top left ammo
+        this.addAmmo(upperLeftConcaveMesh, this.upperLeftConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        // Lower left middle concave
+        this.addAmmo(lowerLeftConcaveMesh, this.lowerLeftConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        // Lower right middle concave
+        this.addAmmo(lowerRightConcaveMesh, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+
     },
 
     //Prepares rigid body for addition to Physics World
@@ -155,11 +219,8 @@ export const board= {
         return shape;
     },
 
-    createExtrudeMesh(length, width, steps, depth, bevelEnabled, bevelThickness, bevelSize, bevelOffset, bevelSegments, material, hole){
-        let shape = this.createThreeShape(length, width);
-        if (hole){
-            shape.holes.push(hole);
-        }
+    //Creates extrudeMesh
+    createExtrudeMesh(shape, steps, depth, bevelEnabled, bevelThickness, bevelSize, bevelOffset, bevelSegments, material){
         let extrudeSettings = {
             steps: steps,
             depth: depth,
@@ -173,59 +234,52 @@ export const board= {
         return extrudeMesh;
     },
 
+    //Cube mesh, from three js bicycle project
     makeSimpleBoxMesh(width, height, depth, material){
     let boxGeo = new THREE.BoxGeometry(width, height, depth);
     let boxMesh = new THREE.Mesh(boxGeo, material);
     return boxMesh
     },
 
+    //Cylinder mesh, from three js bicycle project
     makeCylinderMesh(radiusTop, radiusBottom, height, radialSegments, heightegments, openEnded, thetaStart, thetaLength, material){
         let cylinderGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments,heightegments,openEnded,thetaStart, thetaLength);
         let cylinderMesh = new THREE.Mesh(cylinderGeometry, material);
         return cylinderMesh;
     },
 
+    //Creates Concave shape (based from Extrude examples)
+    createConcaveShape(){
+        let concaveShape = new THREE.Shape();
+        concaveShape.moveTo( -3.4, 0 );
+        concaveShape.splineThru([
+            new THREE.Vector2(-3, -0.3),
+            new THREE.Vector2(-2, -0.9),
+            new THREE.Vector2(-1, -1.3),
+            new THREE.Vector2(0, -1.45),
+            new THREE.Vector2(1, -1.3),
+            new THREE.Vector2(2, -0.9),
+            new THREE.Vector2(3, -0.3),
+            new THREE.Vector2(3.4, 0),
+        ]);
+        concaveShape.lineTo(0,-3.5);
+        concaveShape.lineTo(-3.4,0);
+        concaveShape.lineTo(-3.4,0);
+        return concaveShape;
+    },
 
-
-
-    // axisNo: 1=x, 2=y, 3=z
-    /*tilt(axisNo, angle) {
-        //this.terrainRigidBody.activate(true);
-        let axis;
-        switch (axisNo) {
-            case 1:
-                axis = new THREE.Vector3( 1, 0, 0 );
-                break;
-            case 2:
-                axis = new THREE.Vector3( 0,1, 0);
-                break;
-            case 3:
-                axis = new THREE.Vector3( 0,0, 1);
-                break;
-            default:
-                axis = new THREE.Vector3( 1, 0, 0 );
-        }
-        // Henter gjeldende transformasjon:
-        let terrainTransform = new Ammo.btTransform();
-        let terrainMotionState = this.gameBoardRigidBody.getMotionState();
-        terrainMotionState.getWorldTransform( terrainTransform );
-        let ammoRotation = terrainTransform.getRotation();
-
-        let terrainMotionState2 = this.bottomBoardRigidBody.getMotionState();
-        terrainMotionState2.getWorldTransform( terrainTransform );
-
-
-        // Roter gameBoardRigidBody om en av aksene (bruker Three.Quaternion til dette):
-        let threeCurrentQuat = new THREE.Quaternion(ammoRotation.x(), ammoRotation.y(), ammoRotation.z(), ammoRotation.w());
-        let threeNewQuat = new THREE.Quaternion();
-        threeNewQuat.setFromAxisAngle(axis, this.toRadians(angle));
-        // Slår sammen eksisterende rotasjon med ny/tillegg.
-        let resultQuaternion = threeCurrentQuat.multiply(threeNewQuat);
-        // Setter ny rotasjon på ammo-objektet:
-        terrainTransform.setRotation( new Ammo.btQuaternion( resultQuaternion.x, resultQuaternion.y, resultQuaternion.z, resultQuaternion.w ) );
-        terrainMotionState.setWorldTransform(terrainTransform);
-        terrainMotionState2.setWorldTransform(terrainTransform);
-    },*/
+    // From threejs.org/docs...
+    createHeartShape(){
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo( 25, 25 );
+        heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+        heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
+        heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
+        heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+        heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+        heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
+        return heartShape;
+    },
 
     toRadians(angle) {
         return angle/(2*Math.PI);
