@@ -1,10 +1,12 @@
 import {ammoPhysicsWorld} from "../lib/ammohelpers/lib/AmmoPhysicsWorld.js";
 import {myThreeScene} from "../lib/threehelpers/MyThreeScene.js";
 import * as THREE from "../lib/three/build/three.module.js";
-//import {mySphere} from "../lib/ammohelpers/MySphere.js";
-
 import {board} from "/js/Parts/Board.js";
 import {ball} from "/js/Parts/Ball.js";
+
+/**
+ *Utgangspunktet for denne klassen er hentet fra eksemplet GameBoard av Werner
+ */
 export const pinBallBoard = {
     clock: new THREE.Clock(),
     currentlyPressedKeys: [],
@@ -16,7 +18,7 @@ export const pinBallBoard = {
 
         // three:
         myThreeScene.setupGraphics();
-        myThreeScene.camera.position.set(100, 200, 200);
+        myThreeScene.camera.position.set(0, 270, 200);
         // ammo:
         ammoPhysicsWorld.init(myThreeScene.scene);
 

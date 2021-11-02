@@ -2,8 +2,8 @@ import * as THREE from "../../../PinBall/lib/three/build/three.module.js";
 import {commons} from "../../../PinBall/lib/ammohelpers/lib/Common.js";
 
 /**
- * MERK1: Her brukes BoxGeometry, altså et volum, som plan.
- * MERK2: Bruker btBvhTriangleMeshShape (og ikke btBvhConvexTriangleMeshShape) til planet.
+ * Utgangspunktet for denne klassen er hentet fra ammohelpers/MyGameBoard
+ *
  */
 export const board= {
     //Physics Ammo
@@ -16,8 +16,6 @@ export const board= {
     diagonalBarBody: undefined,
 
     TERRAIN_SIZE: 100,
-
-
 
     init(myPhysicsWorld) {
         this.myPhysicsWorld = myPhysicsWorld;
@@ -57,7 +55,7 @@ export const board= {
         bottomBoardMesh.receiveShadow = true;
         groupMesh.add( bottomBoardMesh );
 
-        /**************Start: No Ammos Yet!********************************/
+
         //GLASS COVER; Ingen AMMO, dvs ballen kan komme gjennom
         let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
         coverBoardMaterial.transparent = true;
@@ -74,7 +72,7 @@ export const board= {
         let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
         let startRampMesh = this.createExtrudeMesh(10, this.TERRAIN_SIZE*3-70, 1, 15, true, 1,1,0, 1, startRampMaterial);
         startRampMesh.rotation.x = -Math.PI / 2;
-        startRampMesh.position.x = this.TERRAIN_SIZE - 30;
+        startRampMesh.position.x = this.TERRAIN_SIZE - 25;
         startRampMesh.position.z = this.TERRAIN_SIZE - 5;
         startRampMesh.receiveShadow = true;
         groupMesh.add(startRampMesh);
@@ -88,33 +86,49 @@ export const board= {
         diagonalRampMesh.position.z = -this.TERRAIN_SIZE - 50;
         diagonalRampMesh.receiveShadow = true;
         groupMesh.add(diagonalRampMesh);
-        /*************End: No ammos.*************************************/
 
-        /******ACTIVATE WHEN BOARD IS FINISHED*******/
-            //groupMesh.rotation.x = 0.2;
+        //Cylinder (makeCylinderMesh example)
+        let hinderMaterial1 = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let hinderMesh1 = this.makeCylinderMesh(5, 5, 15, 50, 1, false, 0, 6.3, hinderMaterial1);
+        hinderMesh1.position.y = 7;
+        groupMesh.add(hinderMesh1);
 
+        //Box (makeSimpleBoxMesh example)
+        let hinderMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let hinderMesh2 = this.makeSimpleBoxMesh(10, 15, 10, hinderMaterial2);
+        hinderMesh2.position.y = 7;
+        hinderMesh2.position.x = 50;
+        hinderMesh2.position.z = -50;
+        groupMesh.add(hinderMesh2);
 
+        //Rotate board slightly for downward pull on the ball
+        groupMesh.rotation.x = 0.2;
+
+        /**************Add Ammos********************************/
         //PhysicsAmmo: frame
-        let compoundShape = new Ammo.btCompoundShape();
-        commons.createTriangleShapeAddToCompound(compoundShape, frameBoardMesh);
-        this.gameBoardRigidBody = commons.createAmmoRigidBody(compoundShape, groupMesh, 0.05, 0.3, position, mass);
-        this.gameBoardRigidBody.setCollisionFlags(this.gameBoardRigidBody.getCollisionFlags() | 2);
-        this.gameBoardRigidBody.setActivationState(4);
-        this.addPhysicsAmmo(this.gameBoardRigidBody, groupMesh, setCollisionMask);
-
+        this.addAmmo(frameBoardMesh, this.gameBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo: bottom
-        let bottomCompoundShape = new Ammo.btCompoundShape();
-        commons.createTriangleShapeAddToCompound(bottomCompoundShape, bottomBoardMesh);
-        this.bottomBoardRigidBody = commons.createAmmoRigidBody(bottomCompoundShape, groupMesh, 0.05, 0.3, position, mass);
-        this.bottomBoardRigidBody.setCollisionFlags(this.bottomBoardRigidBody.getCollisionFlags() | 2);
-        this.bottomBoardRigidBody.setActivationState(4);
-        this.addPhysicsAmmo(this.bottomBoardRigidBody, groupMesh, setCollisionMask);
-
-
+        this.addAmmo(bottomBoardMesh, this.bottomBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //PhysicsAmmo Cover
+        this.addAmmo(coverBoardMesh, this.coverBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //PhysicsAmmo Ramp
+        this.addAmmo(startRampMesh, this.startRampRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //PhysicsAmmo diagonalBar
+        this.addAmmo(diagonalRampMesh, this.diagonalBarBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
     },
 
+    //Prepares rigid body for addition to Physics World
+    addAmmo(mesh, rigidBody, groupMesh,restitution, friction, position, mass, collisionMask){
+        let compoundShape = new Ammo.btCompoundShape();
+        commons.createTriangleShapeAddToCompound(compoundShape, mesh);
+        rigidBody= commons.createAmmoRigidBody(compoundShape, groupMesh, 0.05, 0.3, position, mass);
+        rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | 2);
+        rigidBody.setActivationState(4);
 
+        this.addPhysicsAmmo(rigidBody, groupMesh, collisionMask);
+    },
 
+    //Adds to PhysicsWorld
     addPhysicsAmmo(rigidBody, groupMesh, collisionMask){
         this.myPhysicsWorld.addPhysicsObject(
             rigidBody,
@@ -128,7 +142,7 @@ export const board= {
             this.myPhysicsWorld.COLLISION_GROUP_TRIANGLE
         );
     },
-
+    //Creates a rectangular shape
     createThreeShape(length, width) {
         //let length = this.TERRAIN_SIZE * 2;
         //let width = this.TERRAIN_SIZE * 3;
@@ -175,7 +189,7 @@ export const board= {
 
 
     // axisNo: 1=x, 2=y, 3=z
-    tilt(axisNo, angle) {
+    /*tilt(axisNo, angle) {
         //this.terrainRigidBody.activate(true);
         let axis;
         switch (axisNo) {
@@ -211,7 +225,7 @@ export const board= {
         terrainTransform.setRotation( new Ammo.btQuaternion( resultQuaternion.x, resultQuaternion.y, resultQuaternion.z, resultQuaternion.w ) );
         terrainMotionState.setWorldTransform(terrainTransform);
         terrainMotionState2.setWorldTransform(terrainTransform);
-    },
+    },*/
 
     toRadians(angle) {
         return angle/(2*Math.PI);
