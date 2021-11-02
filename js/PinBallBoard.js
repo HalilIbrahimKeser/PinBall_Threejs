@@ -1,10 +1,10 @@
 import {ammoPhysicsWorld} from "../lib/ammohelpers/lib/AmmoPhysicsWorld.js";
 import {myThreeScene} from "../lib/threehelpers/MyThreeScene.js";
 import * as THREE from "../lib/three/build/three.module.js";
-import {mySphere} from "../lib/ammohelpers/MySphere.js";
+//import {mySphere} from "../lib/ammohelpers/MySphere.js";
 
 import {board} from "/js/Parts/Board.js";
-
+import {ball} from "/js/Parts/Ball.js";
 export const pinBallBoard = {
     clock: new THREE.Clock(),
     currentlyPressedKeys: [],
@@ -24,8 +24,8 @@ export const pinBallBoard = {
         board.init(ammoPhysicsWorld);
         board.create();
 
-        mySphere.init(ammoPhysicsWorld);
-        mySphere.create();
+        ball.init(ammoPhysicsWorld);
+        ball.create();
 
         this.animate();
     },
@@ -43,7 +43,7 @@ export const pinBallBoard = {
 
     keyCheck(elapsed) {
         if (this.currentlyPressedKeys[72]) {	//H
-            mySphere.createRandom(true);
+            ball.createRandom(true);
         }
         // Rotasjon om Z:
         if (this.currentlyPressedKeys[65]) {	//A
