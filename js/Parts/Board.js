@@ -101,7 +101,8 @@ export const board= {
         /*************End: No ammos.*************************************/
 
         /******ACTIVATE WHEN BOARD IS FINISHED*******/
-        //groupMesh.rotation.x = Math.PI/2;
+        groupMesh.rotation.x = 0.08;
+        groupMesh.rotation.y = 0.39;
 
 
         //AMMO: frame
