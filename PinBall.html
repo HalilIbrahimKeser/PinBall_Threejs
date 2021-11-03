@@ -2,6 +2,9 @@
 <html lang="nb">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>PinBall Game</title>
 </head>
 <style>
@@ -18,9 +21,34 @@
     }
 </style>
 <body>
-<div style="top:10px;width:100%;text-align: center; color:rebeccapurple;" class="ui">
+<div style="top:10px;width:100%; " class="ui">
+    <div class="row ">
+        <div class="col-3 ml-5">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <div class="px-3 row d-flex justify-content-between">
+                        <h1 style="color:aqua;">Pinball</h1>
+                        <a type="button" href="#" class="text-info text-lg" id="toggleControlInfo" title="Toggle info"><i class="bi bi-info-circle" style="font-size:25px;"></i></a>
+                    </div>
+                    <h5 class="text-secondary">Av:
+                        <span style="color:deepskyblue;">Asbjørn Bjørge</span>
+                        ,
+                        <span style="color:mediumspringgreen">Halil Ibrahim Keser</span>
+                        &
+                        <span style="color:hotpink">Nancy Lacsamana</span>
+                    </h5>
+                </div>
+                <div class="card-body bg-secondary collapse show">
+                    <h3>Kontroller</h3>
+                    <ul style="color:yellow;">
+                        <li><h5>Zoom inn og ut, og roter brettet med mus.</h5></li>
+                        <li><h5>H for å slippe baller.</h5></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-    H for å slippe baller.<br>
+    </div>
 </div>
 <script src="/lib/ammo/ammo.js"></script>
 <script type="module">
@@ -31,6 +59,14 @@
         Ammo = AmmoLib;
         pinBallBoard.start();
     } );
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    $('#toggleControlInfo').on('click', function(){
+        $('.collapse').collapse('toggle');
+    });
 </script>
 </body>
 </html>
