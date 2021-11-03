@@ -22,7 +22,7 @@
 </style>
 <body>
 <div style="top:10px;width:100%; " class="ui">
-    <div class="row ">
+    <div class="row d-flex justify-content-between">
         <div class="col-3 ml-5">
             <div class="card">
                 <div class="card-header bg-dark">
@@ -48,6 +48,25 @@
             </div>
         </div>
 
+        <div class="col-2 mr-5">
+            <div class="card mr-5 border border-warning">
+                <div class="card-header bg-secondary ">
+                    <h1 class="text-center" style="color:purple;">Score</h1>
+                </div>
+                <div class="card-body bg-dark text-center p-4">
+                    <h1 style="color:yellow; font-size:5rem;" id="scoreText">0</h1>
+                </div>
+            </div>
+            <!-- Hvis det trenges tidteller: fjern style=display:none -->
+            <div class="card mr-5 border border-warning" style="display:none">
+                <div class="card-header bg-secondary ">
+                    <h1 class="text-center" style="color:greenyellow;">Timer</h1>
+                </div>
+                <div class="card-body bg-dark text-center p-4">
+                    <h1 style="color:yellow; font-size:5rem;" id="timeText">0</h1>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="/lib/ammo/ammo.js"></script>
@@ -67,6 +86,11 @@
     $('#toggleControlInfo').on('click', function(){
         $('.collapse').collapse('toggle');
     });
+    /*****test av manipulering av tekst: sekundtelling*****/
+    /*setInterval(function(){
+        var count = parseInt($('#timeText').html()) +1  ;
+        $('#timeText').html(count.toString());
+    }, 1000);*/
 </script>
 </body>
 </html>
