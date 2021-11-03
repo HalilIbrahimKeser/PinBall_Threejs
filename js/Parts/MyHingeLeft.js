@@ -50,11 +50,11 @@ export const myHingeLeft = {
 	},
 
 	create(setCollisionMask=true) {
-		let posStick = {x: 35, y: -5, z: 50};     // Cube
+		let posStick = {x: 35, y: 0, z: 95};     // Cube
 		let sizeStick = {x: 40, y: 1, z: 3};   // Størrelse på pinnen.
 		let massStick = 50;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
-		let posAnchor = {x: 35, y: -5, z: 50};    // Sphere, forankringspunkt.
+		let posAnchor = {x: 35, y: 0, z: 95};    // Sphere, forankringspunkt.
 		let radiusAnchor = 5;                         // Størrelse på kula.
 		let massAnchor = 0;                     // Sphere, denne skal stå i ro.
 

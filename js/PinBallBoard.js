@@ -20,7 +20,7 @@ export const pinBallBoard = {
 
         // three:
         myThreeScene.setupGraphics();
-        myThreeScene.camera.position.set(0, 270, 200);
+        myThreeScene.camera.position.set(0, 300, 200);
         // ammo:
         ammoPhysicsWorld.init(myThreeScene.scene);
 

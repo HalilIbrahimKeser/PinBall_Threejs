@@ -27,7 +27,7 @@ export const board= {
     },
 
     create(setCollisionMask=true) {
-        const position = {x:0, y:0, z:0};
+        const position = {x:0, y:0, z:50};
         const mass = 0;
 
         //THREE, bruker Shape og ExtrudeGeometry:
@@ -39,12 +39,12 @@ export const board= {
         //FRAME
         let hole1 = new THREE.Shape();
         hole1.moveTo( 5,5 );
-        hole1.lineTo( 5, this.TERRAIN_SIZE * 3 -5 );
-        hole1.lineTo( this.TERRAIN_SIZE * 2-5, this.TERRAIN_SIZE * 3-5 );
+        hole1.lineTo( 5, this.TERRAIN_SIZE * 3.5 -5 );
+        hole1.lineTo( this.TERRAIN_SIZE * 2-5, this.TERRAIN_SIZE * 3.5-5 );
         hole1.lineTo( this.TERRAIN_SIZE * 2-5, 5 );
         hole1.lineTo( 5, 5 );
         let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
-        let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
         frameShape.holes.push(hole1);
         let frameBoardMesh = this.createExtrudeMesh(frameShape, 1, 15, true, 1, 1,0,1,frameBoardMaterial);
         frameBoardMesh.rotation.x = -Math.PI / 2;
@@ -55,7 +55,7 @@ export const board= {
 
         //BOTTOM
         let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
-        let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
         let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 5, true, 1,1, 0, 1, bottomBoardMaterial);
         bottomBoardMesh.rotation.x = -Math.PI / 2;
         bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
@@ -68,7 +68,7 @@ export const board= {
         let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
         coverBoardMaterial.transparent = true;
         coverBoardMaterial.opacity = 0.1;
-        let coverShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3);
+        let coverShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
         let coverBoardMesh = this.createExtrudeMesh(coverShape, 1, 0.3, true, 1, 1, 0, 1, coverBoardMaterial);
         coverBoardMesh.rotation.x = -Math.PI / 2;
         coverBoardMesh.position.x = -this.TERRAIN_SIZE;
@@ -79,7 +79,7 @@ export const board= {
 
         //RAMP on the right
         let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
-        let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3-75);
+        let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3.5-75);
         let startRampMesh = this.createExtrudeMesh(startRampShape, 1, 15, true, 1,1,0, 1, startRampMaterial);
         startRampMesh.rotation.x = -Math.PI / 2;
         startRampMesh.position.x = this.TERRAIN_SIZE - 25;
@@ -94,7 +94,7 @@ export const board= {
         upperRightConcaveMesh.scale.y = 15;
         upperRightConcaveMesh.rotation.x = -Math.PI / 2;
         upperRightConcaveMesh.rotation.z = 2.35;
-        upperRightConcaveMesh.position.z =  -160;
+        upperRightConcaveMesh.position.z =  -210;
         upperRightConcaveMesh.position.x =  62;
         upperRightConcaveMesh.receiveShadow = true;
         groupMesh.add(upperRightConcaveMesh);
@@ -105,7 +105,7 @@ export const board= {
         upperLeftConcaveMesh.scale.y = 15;
         upperLeftConcaveMesh.rotation.x = -Math.PI / 2;
         upperLeftConcaveMesh.rotation.z = -2.35;
-        upperLeftConcaveMesh.position.z =  -160;
+        upperLeftConcaveMesh.position.z =  -210;
         upperLeftConcaveMesh.position.x =  -62;
         upperLeftConcaveMesh.receiveShadow = true;
         groupMesh.add(upperLeftConcaveMesh);
@@ -161,7 +161,7 @@ export const board= {
 
         //Rotate board slightly for downward pull on the ball
         groupMesh.rotation.x = this.toRadians(11.45)
-        //groupMesh.rotation.x = 0.2;
+
 
         /**************Add Ammos********************************/
         //PhysicsAmmo: frame
