@@ -4,7 +4,7 @@ import * as THREE from "../lib/three/build/three.module.js";
 import {board} from "/js/Parts/Board.js";
 import {ball} from "/js/Parts/Ball.js";
 import {myHinge} from "../lib/ammohelpers/MyHinge.js";
-//import {myHinge} from "/js/Parts/MyHingeLeft";
+import {myHingeLeft} from "./Parts/MyHingeLeft.js";
 
 /**
  *Utgangspunktet for denne klassen er hentet fra eksemplet GameBoard av Werner
@@ -33,6 +33,9 @@ export const pinBallBoard = {
 
         myHinge.init(ammoPhysicsWorld);
         myHinge.create();
+
+        myHingeLeft.init(ammoPhysicsWorld);
+        myHingeLeft.create();
 
         this.animate();
     },

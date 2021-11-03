@@ -30,12 +30,12 @@ import {commons} from "../../lib/ammohelpers/lib/Common.js";
     This is right in the middle of the low and high angles. For example, consider a western swing door.
     After walking through it will swing in both directions but at the end it stays right in the middle.
  */
-export const myHinge = {
+export const myHingeLeft = {
 	myPhysicsWorld: undefined,
 	stickMesh: undefined,
 	rbStick: undefined,
-	boardRotAxis: {x: 0, y:1, z: 0},
-	boardRotAngle: 20,
+	boardRotAxis: {x: 1, y:0, z: 0},
+	boardRotAngle: 0.2,
 	IMPULSE_FORCE_STICK: 150,
 	threeDirectionVectorStick: undefined,
 
@@ -50,11 +50,11 @@ export const myHinge = {
 	},
 
 	create(setCollisionMask=true) {
-		let posStick = {x: -50, y: -5, z: 40};     // Cube
-		let sizeStick = {x: 40, y: 1, z: 10};   // Størrelse på pinnen.
+		let posStick = {x: 35, y: -5, z: 50};     // Cube
+		let sizeStick = {x: 40, y: 1, z: 3};   // Størrelse på pinnen.
 		let massStick = 50;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
-		let posAnchor = {x: -50, y: -5, z: 60};    // Sphere, forankringspunkt.
+		let posAnchor = {x: 35, y: -5, z: 50};    // Sphere, forankringspunkt.
 		let radiusAnchor = 5;                         // Størrelse på kula.
 		let massAnchor = 0;                     // Sphere, denne skal stå i ro.
 
@@ -122,8 +122,8 @@ export const myHinge = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(0);
-		let upperLimit = this.toRadians(100);
+		let lowerLimit = this.toRadians(130);
+		let upperLimit = this.toRadians(230);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;
