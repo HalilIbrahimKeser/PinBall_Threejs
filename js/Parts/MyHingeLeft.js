@@ -1,5 +1,5 @@
-import * as THREE from "../three/build/three.module.js";
-import {commons} from "./lib/Common.js";
+import * as THREE from "../../lib/three/build/three.module.js";
+import {commons} from "../../lib/ammohelpers/lib/Common.js";
 
 /**
  * Pinnen er forankret i kula (som står i ro, dvs. masse=0).
@@ -34,8 +34,8 @@ export const myHinge = {
 	myPhysicsWorld: undefined,
 	stickMesh: undefined,
 	rbStick: undefined,
-	boardRotAxis: {x: 0, y:0, z: 1},
-	boardRotAngle: Math.PI - 0.5,
+	boardRotAxis: {x: 0, y:1, z: 0},
+	boardRotAngle: 20,
 	IMPULSE_FORCE_STICK: 150,
 	threeDirectionVectorStick: undefined,
 
@@ -122,8 +122,8 @@ export const myHinge = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(-180);
-		let upperLimit = this.toRadians(180);
+		let lowerLimit = this.toRadians(0);
+		let upperLimit = this.toRadians(100);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;

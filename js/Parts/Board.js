@@ -5,6 +5,7 @@ import {commons} from "../../../PinBall/lib/ammohelpers/lib/Common.js";
  * Utgangspunktet for denne klassen er hentet fra ammohelpers/MyGameBoard
  *
  */
+
 export const board= {
     //Physics Ammo
     myPhysicsWorld: undefined,
@@ -159,7 +160,8 @@ export const board= {
         /***********END: Shape example codes, NO AMMOS***********************/
 
         //Rotate board slightly for downward pull on the ball
-        groupMesh.rotation.x = 0.2;
+        groupMesh.rotation.x = this.toRadians(11.45)
+        //groupMesh.rotation.x = 0.2;
 
         /**************Add Ammos********************************/
         //PhysicsAmmo: frame
@@ -281,7 +283,8 @@ export const board= {
         return heartShape;
     },
 
-    toRadians(angle) {
-        return angle/(2*Math.PI);
+    toRadians(degrees) {
+        var pi = Math.PI;
+        return degrees * (pi / 180);  //endret denne. Den var feil
     }
 }

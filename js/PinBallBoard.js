@@ -3,6 +3,8 @@ import {myThreeScene} from "../lib/threehelpers/MyThreeScene.js";
 import * as THREE from "../lib/three/build/three.module.js";
 import {board} from "/js/Parts/Board.js";
 import {ball} from "/js/Parts/Ball.js";
+import {myHinge} from "../lib/ammohelpers/MyHinge.js";
+//import {myHinge} from "/js/Parts/MyHingeLeft";
 
 /**
  *Utgangspunktet for denne klassen er hentet fra eksemplet GameBoard av Werner
@@ -29,6 +31,9 @@ export const pinBallBoard = {
         ball.init(ammoPhysicsWorld);
         ball.create();
 
+        myHinge.init(ammoPhysicsWorld);
+        myHinge.create();
+
         this.animate();
     },
 
@@ -49,17 +54,23 @@ export const pinBallBoard = {
         }
         // Rotasjon om Z:
         if (this.currentlyPressedKeys[65]) {	//A
-            board.tilt(3, 0.03);
+            //board.tilt(3, 0.03);
         }
         if (this.currentlyPressedKeys[68]) {	//D
-            board.tilt(3, -0.03);
+            //board.tilt(3, -0.03);
         }
         // Rotasjon om X:
         if (this.currentlyPressedKeys[87]) {	//W
-            board.tilt(1, -0.03);
+            //board.tilt(1, -0.03);
         }
         if (this.currentlyPressedKeys[83]) {	//S
-            board.tilt(1, 0.03);
+            //board.tilt(1, 0.03);
+        }
+        if (this.currentlyPressedKeys[86]) {	//V
+            myHinge.impulseLeft();
+        }
+        if (this.currentlyPressedKeys[66]) {	//B
+            myHinge.impulseRight();
         }
 
     },
