@@ -30,7 +30,7 @@ import {commons} from "../../lib/ammohelpers/lib/Common.js";
     This is right in the middle of the low and high angles. For example, consider a western swing door.
     After walking through it will swing in both directions but at the end it stays right in the middle.
  */
-export const myHingeLeft = {
+export const myHingeRight = {
 	myPhysicsWorld: undefined,
 	stickMesh: undefined,
 	rbStick: undefined,
@@ -50,11 +50,11 @@ export const myHingeLeft = {
 	},
 
 	create(setCollisionMask=true) {
-		let posStick = {x: 40, y: 0, z: 95};     // Cube
+		let posStick = {x: -60, y: 0, z: 95};     // Cube
 		let sizeStick = {x: 45, y: 1, z: 3};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
-		let posAnchor = {x: 40, y: 0, z: 95};    // Sphere, forankringspunkt.
+		let posAnchor = {x: -60, y: 0, z: 95};    // Sphere, forankringspunkt.
 		let radiusAnchor = 4;                         // Størrelse på kula.
 		let massAnchor = 0;                     // Sphere, denne skal stå i ro.
 
@@ -64,7 +64,7 @@ export const myHingeLeft = {
 		let anchorMesh = new THREE.Mesh(new THREE.SphereGeometry(radiusAnchor), new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
 		anchorMesh.userData.tag = 'anchor';
 		anchorMesh.position.set(posAnchor.x, posAnchor.y, posAnchor.z);
-
+		//threeQuat.rotation.x = this.toRadians(-90)
 		anchorMesh.setRotationFromQuaternion(threeQuat);
 		anchorMesh.castShadow = true;
 		anchorMesh.receiveShadow = true;
@@ -88,7 +88,7 @@ export const myHingeLeft = {
 		this.stickMesh = new THREE.Mesh(new THREE.BoxGeometry(sizeStick.x, sizeStick.y, sizeStick.z), new THREE.MeshPhongMaterial({color: 0xf78a1d}));
 		this.stickMesh.userData.tag = 'stick';
 		this.stickMesh.position.set(posStick.x, posStick.y, posStick.z);
-		this.stickMesh.rotation.z = this.toRadians(90)
+		this.stickMesh.rotation.z = this.toRadians(45)
 		this.stickMesh.castShadow = true;
 		this.stickMesh.receiveShadow = true;
 		//AMMO, kube/stick:
@@ -122,14 +122,14 @@ export const myHingeLeft = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(130);
-		let upperLimit = this.toRadians(230);
+		let lowerLimit = this.toRadians(-50);
+		let upperLimit = this.toRadians(50);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;
 		hingeConstraint.setLimit( lowerLimit, upperLimit, softness, biasFactor, relaxationFactor);
 		this.myPhysicsWorld.ammoPhysicsWorld.addConstraint( hingeConstraint, false );
-		this.stickMesh.rotation.y = this.toRadians(45)
+		//this.stickMesh.rotation.y = this.toRadians(45)
 	},
 
 	impulseLeft() {

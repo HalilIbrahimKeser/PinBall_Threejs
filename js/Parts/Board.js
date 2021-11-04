@@ -128,7 +128,7 @@ export const board= {
         lowerRightConcaveMesh.rotation.x = -Math.PI / 2;
         lowerRightConcaveMesh.rotation.z = -0.78;
         lowerRightConcaveMesh.position.z =  55;
-        lowerRightConcaveMesh.position.x =  -55;
+        lowerRightConcaveMesh.position.x = -55;
         lowerRightConcaveMesh.receiveShadow = true;
         groupMesh.add(lowerRightConcaveMesh);
 
@@ -156,8 +156,10 @@ export const board= {
         heartMesh.rotation.z = -Math.PI;
         heartMesh.scale.x = 0.2;
         heartMesh.scale.y = 0.2;
+        heartMesh.position.x = -3.8;
+        heartMesh.position.z = -40;
         groupMesh.add(heartMesh);
-        /***********END: Shape example codes, NO AMMOS***********************/
+        /***********END: Shape example codes, NO AMMOS************** *********/
 
         //Rotate board slightly for downward pull on the ball
         groupMesh.rotation.x = this.toRadians(11.45)
