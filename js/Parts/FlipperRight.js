@@ -120,9 +120,9 @@ export const flipperRight = {
 
 		//AMMO, hengsel: SE F.EKS: https://www.panda3d.org/manual/?title=Bullet_Constraints#Hinge_Constraint:
 		let anchorPivot = new Ammo.btVector3( 0, 1, 0 );
-		let stickPivot = new Ammo.btVector3(  -sizeStick.x/2, -20, 0 );
+		let stickPivot = new Ammo.btVector3(  0,-sizeStick.x/2, 0 );
 		const anchorAxis = new Ammo.btVector3(0,1,0);
-		const stickAxis = new Ammo.btVector3(0,1,0);
+		const stickAxis = new Ammo.btVector3(1,0,0);
 		let hingeConstraint = new Ammo.btHingeConstraint(
 			rigidBodyAnchor,
 			this.rbStick,
@@ -133,8 +133,8 @@ export const flipperRight = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(130);
-		let upperLimit = this.toRadians(230);
+		let lowerLimit = this.toRadians(-50);
+		let upperLimit = this.toRadians(50);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;
