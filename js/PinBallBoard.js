@@ -76,10 +76,10 @@ export const pinBallBoard = {
             flipperLeft.impulseRight();
         }
         if (this.currentlyPressedKeys[78] || this.currentlyPressedKeys[18]) {	//N og Høyre ALT
-            flipperRight.impulseLeft();
+            flipperRight.impulseRight();
         }
         if (this.currentlyPressedKeys[77] || this.currentlyPressedKeys[32]) {	//M og Space
-            flipperRight.impulseRight();
+            flipperRight.impulseLeft();
         }
 
 

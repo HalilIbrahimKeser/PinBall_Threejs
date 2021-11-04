@@ -132,6 +132,14 @@ export const board= {
         lowerRightConcaveMesh.receiveShadow = true;
         groupMesh.add(lowerRightConcaveMesh);
 
+        let springConstraintMaterial = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
+
+        let springConstraintMesh = this.createSpringConstraint( 0,20,
+            {x: 90, y: 15, z: 91}, {x: 90, y: 15, z: 50}, {x: 7, y: 7, z: 7}, springConstraintMaterial);
+        groupMesh.add(springConstraintMesh.springCubeMesh1);
+        groupMesh.add(springConstraintMesh.springCubeMesh2);
+
+
         /***********Start: Shape example codes, NO AMMOS***********************/
         //Cylinder (makeCylinderMesh example)
         let hinderMaterial1 = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
@@ -161,6 +169,7 @@ export const board= {
         groupMesh.add(heartMesh);
         /***********END: Shape example codes, NO AMMOS************** *********/
 
+
         //Rotate board slightly for downward pull on the ball
         groupMesh.rotation.x = this.toRadians(11.45)
 
@@ -182,11 +191,14 @@ export const board= {
         this.addAmmo(lowerLeftConcaveMesh, this.lowerLeftConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         // Lower right middle concave
         this.addAmmo(lowerRightConcaveMesh, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        // Spring constraint
+        this.addAmmo(springConstraintMesh.springCubeMesh1, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(springConstraintMesh.springCubeMesh2, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
 
     },
 
     //Prepares rigid body for addition to Physics World
-    addAmmo(mesh, rigidBody, groupMesh,restitution, friction, position, mass, collisionMask){
+    addAmmo(mesh, rigidBody, groupMesh, restitution, friction, position, mass, collisionMask){
         let compoundShape = new Ammo.btCompoundShape();
         commons.createTriangleShapeAddToCompound(compoundShape, mesh);
         rigidBody= commons.createAmmoRigidBody(compoundShape, groupMesh, 0.05, 0.3, position, mass);
@@ -210,6 +222,7 @@ export const board= {
             this.myPhysicsWorld.COLLISION_GROUP_TRIANGLE
         );
     },
+
     //Creates a rectangular shape
     createThreeShape(length, width) {
         //let length = this.TERRAIN_SIZE * 2;
@@ -236,6 +249,60 @@ export const board= {
         let shapeGeometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
         let extrudeMesh = new THREE.Mesh(shapeGeometry, material);
         return extrudeMesh;
+    },
+
+    createSpringConstraint(mass1, mass2, pos1, pos2, size, material) {
+        let sprConsSettings = {
+            mass1 : mass1,
+            mass2 : mass2,
+            pos1 : pos1,
+            pos2 : pos2,
+            size : size,
+            material : material
+        };
+
+        let springCubeMesh1 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z), material);
+        springCubeMesh1.position.set(sprConsSettings.pos1.x, sprConsSettings.pos1.y, sprConsSettings.pos1.z);
+
+        let springCubeMesh2 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z),
+            new THREE.MeshPhongMaterial( { color: 0xe4d190, side: THREE.DoubleSide } ));
+        springCubeMesh2.position.set(sprConsSettings.pos2.x, sprConsSettings.pos2.y, sprConsSettings.pos2.z);
+
+        // Ammo: samme shape brukes av begge RBs:
+        let boxShape = new Ammo.btBoxShape(
+            new Ammo.btVector3( sprConsSettings.size.x/2, sprConsSettings.size.y/2, sprConsSettings.size.z/2 ) );
+
+        let rbBox1 = commons.createAmmoRigidBody(boxShape, springCubeMesh1, 0.4, 0.6, sprConsSettings.pos1, sprConsSettings.mass1);
+        let rbBox2 = commons.createAmmoRigidBody(boxShape, springCubeMesh2, 0.4, 0.6, sprConsSettings.pos2, sprConsSettings.mass2);
+
+        //FJÆR MELLOM box1 og 2: https://stackoverflow.com/questions/46671809/how-to-make-a-spring-constraint-with-bullet-physics
+        let transform1 = new Ammo.btTransform();
+        transform1.setIdentity();
+        transform1.setOrigin( new Ammo.btVector3( 0, -1, 0 ) );
+        let transform2 = new Ammo.btTransform();
+        transform2.setIdentity();
+        transform2.setOrigin( new Ammo.btVector3( 0, 0, 0 ) );
+
+        let springConstraint = new Ammo.btGeneric6DofSpringConstraint(
+            rbBox1,
+            rbBox2,
+            transform1,
+            transform2,
+            true);
+
+        springConstraint.setLinearLowerLimit(new Ammo.btVector3(0.0, 1.0, 0.0));
+        springConstraint.setLinearUpperLimit(new Ammo.btVector3(0.0, 0.0, 0.0));
+
+        springConstraint.setAngularLowerLimit(new Ammo.btVector3(0, 0.0, 0.0));
+        springConstraint.setAngularUpperLimit(new Ammo.btVector3(0, 0.0, 0.0));
+
+        springConstraint.enableSpring(1,  true);    // Translation on y-axis
+
+        springConstraint.setStiffness(1, 55);
+
+        springConstraint.setDamping  (1,  0.9);
+
+        return { springCubeMesh1, springCubeMesh2 }
     },
 
     //Cube mesh, from three js bicycle project

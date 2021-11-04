@@ -68,10 +68,12 @@ export const flipperRight = {
 		//THREE, kule:
 		let threeQuat = new THREE.Quaternion();  // Roterer i forhold til planet (dersom satt).
 		threeQuat.setFromAxisAngle( new THREE.Vector3( this.boardRotAxis.x, this.boardRotAxis.y, this.boardRotAxis.z ), this.boardRotAngle);
-		let anchorMesh = new THREE.Mesh(new THREE.SphereGeometry(radiusAnchor), new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
+		let anchorMesh = new THREE.Mesh(
+			new THREE.SphereGeometry(radiusAnchor),
+			new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
 		anchorMesh.userData.tag = 'anchor';
 		anchorMesh.position.set(posAnchor.x, posAnchor.y, posAnchor.z);
-		anchorMesh.rotation.x = this.toRadians(45)
+		//anchorMesh.rotation.x = this.toRadians(45)
 		anchorMesh.setRotationFromQuaternion(threeQuat);
 		anchorMesh.castShadow = true;
 		anchorMesh.receiveShadow = true;

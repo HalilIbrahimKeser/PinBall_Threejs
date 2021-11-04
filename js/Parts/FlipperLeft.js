@@ -57,7 +57,8 @@ export const flipperLeft = {
 
 	create(setCollisionMask=true) {
 		let posStick = {x: -60, y: 0, z: 95};     // Cube
-		let sizeStick = {x: 45, y: 1, z: 3};   // Størrelse på pinnen.
+		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 1, radiusBottom : 3, height : 45,
+			radialSegments : 8, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
 		let posAnchor = {x: -60, y: 0, z: 95};    // Sphere, forankringspunkt.
@@ -67,7 +68,9 @@ export const flipperLeft = {
 		//THREE, kule:
 		let threeQuat = new THREE.Quaternion();  // Roterer i forhold til planet (dersom satt).
 		threeQuat.setFromAxisAngle( new THREE.Vector3( this.boardRotAxis.x, this.boardRotAxis.y, this.boardRotAxis.z ), this.boardRotAngle);
-		let anchorMesh = new THREE.Mesh(new THREE.SphereGeometry(radiusAnchor), new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
+		let anchorMesh = new THREE.Mesh(
+			new THREE.SphereGeometry(radiusAnchor),
+			new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
 		anchorMesh.userData.tag = 'anchor';
 		anchorMesh.position.set(posAnchor.x, posAnchor.y, posAnchor.z);
 		//threeQuat.rotation.x = this.toRadians(-90)
@@ -91,7 +94,11 @@ export const flipperLeft = {
 		);
 
 		//THREE, kube/stick:
-		this.stickMesh = new THREE.Mesh(new THREE.BoxGeometry(sizeStick.x, sizeStick.y, sizeStick.z), new THREE.MeshPhongMaterial({color: 0xf78a1d}));
+		this.stickMesh =
+			new THREE.Mesh(new THREE.CylinderGeometry(sizeStick.radiusTop, sizeStick.radiusBottom, sizeStick.height,
+					sizeStick.radialSegments, sizeStick.heightSegments, sizeStick.openEnded,
+					sizeStick.thetaStart, sizeStick.thetaLength),
+			new THREE.MeshPhongMaterial({color: 0xf78a1d}));
 		this.stickMesh.userData.tag = 'stick';
 		this.stickMesh.position.set(posStick.x, posStick.y, posStick.z);
 		//this.stickMesh.rotation.z = this.toRadians(45)
@@ -115,9 +122,9 @@ export const flipperLeft = {
 
 		//AMMO, hengsel: SE F.EKS: https://www.panda3d.org/manual/?title=Bullet_Constraints#Hinge_Constraint:
 		let anchorPivot = new Ammo.btVector3( 0, 1, 0 );
-		let stickPivot = new Ammo.btVector3(  -sizeStick.x/2, 0, 0 );
+		let stickPivot = new Ammo.btVector3(  0, sizeStick.x/2, 0 );
 		const anchorAxis = new Ammo.btVector3(0,1,0);
-		const stickAxis = new Ammo.btVector3(0,1,0);
+		const stickAxis = new Ammo.btVector3(1, 0, 0);
 		let hingeConstraint = new Ammo.btHingeConstraint(
 			rigidBodyAnchor,
 			this.rbStick,
