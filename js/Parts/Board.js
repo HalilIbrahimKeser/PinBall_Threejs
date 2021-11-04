@@ -132,6 +132,7 @@ export const board= {
         lowerRightConcaveMesh.receiveShadow = true;
         groupMesh.add(lowerRightConcaveMesh);
 
+
         let springConstraintMaterial = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
 
         let springConstraintMesh = this.createSpringConstraint( 0,20,
@@ -139,23 +140,103 @@ export const board= {
         groupMesh.add(springConstraintMesh.springCubeMesh1);
         groupMesh.add(springConstraintMesh.springCubeMesh2);
 
+        /**********Shapes and obstacles**********/
+
+        //Cylinders top of board
+
+        // Top left cone
+        let topLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topLeftCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, topLeftCylinderMaterial);
+        topLeftCylinderMesh.position.y = 7;
+        topLeftCylinderMesh.position.z = -200;
+        topLeftCylinderMesh.position.x = -70;
+        groupMesh.add(topLeftCylinderMesh);
+
+        // Top right cone
+        let topRightCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topRightCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, topRightCylinderMaterial);
+        topRightCylinderMesh.position.y = 7;
+        topRightCylinderMesh.position.z = -200;
+        topRightCylinderMesh.position.x = 60;
+        groupMesh.add(topRightCylinderMesh);
+
+        // Middle cylinders
+        let topMiddleLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topMiddleLeftCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleLeftCylinderMaterial);
+        topMiddleLeftCylinderMesh.position.y = 7;
+        topMiddleLeftCylinderMesh.position.z = -180;
+        topMiddleLeftCylinderMesh.position.x = 30;
+        groupMesh.add(topMiddleLeftCylinderMesh);
+
+        let topMiddleCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topMiddleCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleCylinderMaterial);
+        topMiddleCylinderMesh.position.y = 7;
+        topMiddleCylinderMesh.position.z = -180;
+        topMiddleCylinderMesh.position.x = -5;
+        groupMesh.add(topMiddleCylinderMesh);
+
+        let topMiddleRightCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topMiddleRightCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleRightCylinderMaterial);
+        topMiddleRightCylinderMesh.position.y = 7;
+        topMiddleRightCylinderMesh.position.z = -180;
+        topMiddleRightCylinderMesh.position.x = -40;
+        groupMesh.add(topMiddleRightCylinderMesh);
+
+        //Middle section
+        //Middle Left
+        let middleLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleLeftRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, middleLeftRectangleMaterial);
+        middleLeftRectangleMesh.position.y = 7;
+        middleLeftRectangleMesh.position.x = -85;
+        middleLeftRectangleMesh.position.z = -75;
+        middleLeftRectangleMesh.rotation.y = Math.PI/3.6
+        groupMesh.add(middleLeftRectangleMesh);
+
+        let middleLeftRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleLeftRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, middleLeftRectangleMaterial2);
+        middleLeftRectangleMesh2.position.y = 7;
+        middleLeftRectangleMesh2.position.x = -85;
+        middleLeftRectangleMesh2.position.z = -65;
+        middleLeftRectangleMesh2.rotation.y = Math.PI/2
+        groupMesh.add(middleLeftRectangleMesh2);
+
+        //Middle right
+        let middleRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleRightRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, middleRightRectangleMaterial);
+        middleRightRectangleMesh.position.y = 7;
+        middleRightRectangleMesh.position.x = 65;
+        middleRightRectangleMesh.position.z = -75;
+        middleRightRectangleMesh.rotation.y = Math.PI/1.4
+        groupMesh.add(middleRightRectangleMesh);
+
+        let middleRightRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleRightRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, middleRightRectangleMaterial2);
+        middleRightRectangleMesh2.position.y = 7;
+        middleRightRectangleMesh2.position.x = 65;
+        middleRightRectangleMesh2.position.z = -65;
+        middleRightRectangleMesh2.rotation.y = Math.PI/2
+        groupMesh.add(middleRightRectangleMesh2);
+
+        //Lower rectangles over arms
+        //Lower left arm
+        let lowerLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerLeftRectangleMaterial);
+        lowerLeftRectangleMesh.position.y = 7;
+        lowerLeftRectangleMesh.position.x = -50;
+        lowerLeftRectangleMesh.position.z = 15;
+        lowerLeftRectangleMesh.rotation.y = Math.PI/3.6
+        groupMesh.add(lowerLeftRectangleMesh);
+
+        // Lower right arm
+        let lowerRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerRightRectangleMaterial);
+        lowerRightRectangleMesh.position.y = 7;
+        lowerRightRectangleMesh.position.x = 30;
+        lowerRightRectangleMesh.position.z = 15;
+        lowerRightRectangleMesh.rotation.y = Math.PI/1.4
+        groupMesh.add(lowerRightRectangleMesh);
 
         /***********Start: Shape example codes, NO AMMOS***********************/
-        //Cylinder (makeCylinderMesh example)
-        let hinderMaterial1 = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let hinderMesh1 = this.makeCylinderMesh(5, 5, 15, 50, 1, false, 0, 6.3, hinderMaterial1);
-        hinderMesh1.position.y = 7;
-        hinderMesh1.position.z = -70;
-        hinderMesh1.position.x = -40;
-        groupMesh.add(hinderMesh1);
-
-        //Box (makeSimpleBoxMesh example)
-        let hinderMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let hinderMesh2 = this.makeSimpleBoxMesh(10, 15, 10, hinderMaterial2);
-        hinderMesh2.position.y = 7;
-        hinderMesh2.position.x = 40;
-        hinderMesh2.position.z = -70;
-        groupMesh.add(hinderMesh2);
 
         //Heart example
         let heartShape = this.createHeartShape();
