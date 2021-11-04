@@ -3,8 +3,8 @@ import {myThreeScene} from "../lib/threehelpers/MyThreeScene.js";
 import * as THREE from "../lib/three/build/three.module.js";
 import {board} from "/js/Parts/Board.js";
 import {ball} from "/js/Parts/Ball.js";
-import {myHingeLeft} from "./Parts/MyHingeLeft.js";
-import {myHingeRight} from "./Parts/MyHingeRight.js";
+import {flipperRight} from "./Parts/FlipperRight.js";
+import {flipperLeft} from "./Parts/FlipperLeft.js";
 
 /**
  *Utgangspunktet for denne klassen er hentet fra eksemplet GameBoard av Werner
@@ -31,11 +31,11 @@ export const pinBallBoard = {
         ball.init(ammoPhysicsWorld);
         ball.create();
 
-        myHingeRight.init(ammoPhysicsWorld);
-        myHingeRight.create();
+        flipperLeft.init(ammoPhysicsWorld);
+        flipperLeft.create();
 
-        myHingeLeft.init(ammoPhysicsWorld);
-        myHingeLeft.create();
+        flipperRight.init(ammoPhysicsWorld);
+        flipperRight.create();
 
         this.animate();
     },
@@ -70,16 +70,16 @@ export const pinBallBoard = {
             //board.tilt(1, 0.03);
         }
         if (this.currentlyPressedKeys[86] || this.currentlyPressedKeys[32]) {	//V og Space
-            myHingeRight.impulseLeft();
+            flipperLeft.impulseLeft();
         }
         if (this.currentlyPressedKeys[66] || this.currentlyPressedKeys[18]) {	//B og Høyre ALT
-            myHingeRight.impulseRight();
+            flipperLeft.impulseRight();
         }
         if (this.currentlyPressedKeys[78] || this.currentlyPressedKeys[18]) {	//N og Høyre ALT
-            myHingeLeft.impulseLeft();
+            flipperRight.impulseLeft();
         }
         if (this.currentlyPressedKeys[77] || this.currentlyPressedKeys[32]) {	//M og Space
-            myHingeLeft.impulseRight();
+            flipperRight.impulseRight();
         }
 
 

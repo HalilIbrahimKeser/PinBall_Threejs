@@ -2,6 +2,12 @@ import * as THREE from "../../lib/three/build/three.module.js";
 import {commons} from "../../lib/ammohelpers/lib/Common.js";
 
 /**
+ * Utgangspunktet for denne klassen er hentet fra ammohelpers/MyHinge.js
+ *
+ */
+
+
+/**
  * Pinnen er forankret i kula (som står i ro, dvs. masse=0).
  * Man bestemmer selv om ankret (Kula) skal tegnes/vises.
  * Pinnen kan beveges - gjøres vha. applyCentralImpulse
@@ -30,11 +36,11 @@ import {commons} from "../../lib/ammohelpers/lib/Common.js";
     This is right in the middle of the low and high angles. For example, consider a western swing door.
     After walking through it will swing in both directions but at the end it stays right in the middle.
  */
-export const myHingeLeft = {
+export const flipperRight = {
 	myPhysicsWorld: undefined,
 	stickMesh: undefined,
 	rbStick: undefined,
-	boardRotAxis: {x: 1, y:0, z: 0},
+	boardRotAxis: {x: 1, y:0, z:0 },
 	boardRotAngle: 0.2,
 	IMPULSE_FORCE_STICK: 150,
 	threeDirectionVectorStick: undefined,
@@ -50,8 +56,9 @@ export const myHingeLeft = {
 	},
 
 	create(setCollisionMask=true) {
-		let posStick = {x: 40, y: 0, z: 95};     // Cube
-		let sizeStick = {x: 45, y: 1, z: 3};   // Størrelse på pinnen.
+		let posStick = {x: 40, y: 0, z: 95};     // Cylinder
+		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 1, radiusBottom : 3, height : 45,
+			radialSegments : 8, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
 		let posAnchor = {x: 40, y: 0, z: 95};    // Sphere, forankringspunkt.
@@ -64,7 +71,7 @@ export const myHingeLeft = {
 		let anchorMesh = new THREE.Mesh(new THREE.SphereGeometry(radiusAnchor), new THREE.MeshPhongMaterial({color: 0xb846db, transparent: true, opacity: 0.5}));
 		anchorMesh.userData.tag = 'anchor';
 		anchorMesh.position.set(posAnchor.x, posAnchor.y, posAnchor.z);
-
+		anchorMesh.rotation.x = this.toRadians(45)
 		anchorMesh.setRotationFromQuaternion(threeQuat);
 		anchorMesh.castShadow = true;
 		anchorMesh.receiveShadow = true;
@@ -84,11 +91,15 @@ export const myHingeLeft = {
 				this.myPhysicsWorld.COLLISION_GROUP_MOVEABLE
 		);
 
-		//THREE, kube/stick:
-		this.stickMesh = new THREE.Mesh(new THREE.BoxGeometry(sizeStick.x, sizeStick.y, sizeStick.z), new THREE.MeshPhongMaterial({color: 0xf78a1d}));
+		//THREE, cylinder/stick:
+		this.stickMesh = new THREE.Mesh(
+			new THREE.CylinderGeometry(sizeStick.radiusTop, sizeStick.radiusBottom, sizeStick.height,
+				sizeStick.radialSegments, sizeStick.heightSegments, sizeStick.openEnded,
+				sizeStick.thetaStart, sizeStick.thetaLength),
+			new THREE.MeshPhongMaterial({color: 0xf78a1d}));
 		this.stickMesh.userData.tag = 'stick';
 		this.stickMesh.position.set(posStick.x, posStick.y, posStick.z);
-		this.stickMesh.rotation.z = this.toRadians(90)
+		//this.stickMesh.rotation.z = this.toRadians(45)
 		this.stickMesh.castShadow = true;
 		this.stickMesh.receiveShadow = true;
 		//AMMO, kube/stick:
@@ -109,7 +120,7 @@ export const myHingeLeft = {
 
 		//AMMO, hengsel: SE F.EKS: https://www.panda3d.org/manual/?title=Bullet_Constraints#Hinge_Constraint:
 		let anchorPivot = new Ammo.btVector3( 0, 1, 0 );
-		let stickPivot = new Ammo.btVector3(  -sizeStick.x/2, 0, 0 );
+		let stickPivot = new Ammo.btVector3(  -sizeStick.x/2, -20, 0 );
 		const anchorAxis = new Ammo.btVector3(0,1,0);
 		const stickAxis = new Ammo.btVector3(0,1,0);
 		let hingeConstraint = new Ammo.btHingeConstraint(
@@ -129,7 +140,7 @@ export const myHingeLeft = {
 		let relaxationFactor = 0.9;
 		hingeConstraint.setLimit( lowerLimit, upperLimit, softness, biasFactor, relaxationFactor);
 		this.myPhysicsWorld.ammoPhysicsWorld.addConstraint( hingeConstraint, false );
-		this.stickMesh.rotation.y = this.toRadians(45)
+		//this.stickMesh.rotation.y = this.toRadians(60)
 	},
 
 	impulseLeft() {

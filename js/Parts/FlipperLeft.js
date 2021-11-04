@@ -2,6 +2,12 @@ import * as THREE from "../../lib/three/build/three.module.js";
 import {commons} from "../../lib/ammohelpers/lib/Common.js";
 
 /**
+ * Utgangspunktet for denne klassen er hentet fra ammohelpers/MyHinge.js
+ *
+ */
+
+
+/**
  * Pinnen er forankret i kula (som står i ro, dvs. masse=0).
  * Man bestemmer selv om ankret (Kula) skal tegnes/vises.
  * Pinnen kan beveges - gjøres vha. applyCentralImpulse
@@ -30,7 +36,7 @@ import {commons} from "../../lib/ammohelpers/lib/Common.js";
     This is right in the middle of the low and high angles. For example, consider a western swing door.
     After walking through it will swing in both directions but at the end it stays right in the middle.
  */
-export const myHingeRight = {
+export const flipperLeft = {
 	myPhysicsWorld: undefined,
 	stickMesh: undefined,
 	rbStick: undefined,
@@ -88,7 +94,7 @@ export const myHingeRight = {
 		this.stickMesh = new THREE.Mesh(new THREE.BoxGeometry(sizeStick.x, sizeStick.y, sizeStick.z), new THREE.MeshPhongMaterial({color: 0xf78a1d}));
 		this.stickMesh.userData.tag = 'stick';
 		this.stickMesh.position.set(posStick.x, posStick.y, posStick.z);
-		this.stickMesh.rotation.z = this.toRadians(45)
+		//this.stickMesh.rotation.z = this.toRadians(45)
 		this.stickMesh.castShadow = true;
 		this.stickMesh.receiveShadow = true;
 		//AMMO, kube/stick:
