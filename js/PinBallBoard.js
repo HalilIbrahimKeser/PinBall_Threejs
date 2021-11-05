@@ -49,7 +49,7 @@ export const pinBallBoard = {
         this.keyCheck(deltaTime);
         //Oppdaterer grafikken:
         myThreeScene.updateGraphics(deltaTime);
-    },
+       },
 
     keyCheck(elapsed) {
         if (this.currentlyPressedKeys[72]) {	//H
