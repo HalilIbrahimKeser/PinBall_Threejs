@@ -58,7 +58,7 @@ export const flipperLeft = {
 	create(setCollisionMask=true) {
 		let posStick = {x: -60, y: 0, z: 95};     // Cube
 		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 1, radiusBottom : 3, height : 45,
-			radialSegments : 8, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
+			radialSegments : 30, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
 		let posAnchor = {x: -60, y: 0, z: 95};    // Sphere, forankringspunkt.
@@ -135,7 +135,7 @@ export const flipperLeft = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(-50);
+		let lowerLimit = this.toRadians(-48);
 		let upperLimit = this.toRadians(50);
 		let softness = 0.3;
 		let biasFactor = 1;
