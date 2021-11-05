@@ -57,7 +57,7 @@ export const flipperRight = {
 
 	create(setCollisionMask=true) {
 		let posStick = {x: 40, y: 0, z: 95};     // Cylinder
-		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 1, radiusBottom : 3, height : 45,
+		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 3, radiusBottom : 1, height : 45,
 			radialSegments : 8, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
@@ -105,7 +105,7 @@ export const flipperRight = {
 		this.stickMesh.castShadow = true;
 		this.stickMesh.receiveShadow = true;
 		//AMMO, kube/stick:
-		let stickColShape =  new Ammo.btBoxShape( new Ammo.btVector3( sizeStick.x/2, sizeStick.y/2, sizeStick.z/2 ) );
+		let stickColShape =  new Ammo.btBoxShape( new Ammo.btVector3( sizeStick.y/2, sizeStick.x/2, sizeStick.z/2 ) );
 		this.rbStick = commons.createAmmoRigidBody(stickColShape, this.stickMesh, 0.4, 0.9, posStick, massStick);
 		this.myPhysicsWorld.addPhysicsObject(
 			this.rbStick,
