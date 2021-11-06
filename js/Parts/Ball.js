@@ -30,7 +30,7 @@ export const ball = {
 
         //AMMO
         let shape = new Ammo.btSphereShape(radius);
-        let rigidBody = commons.createAmmoRigidBody(shape, this.mesh, 2,  0.5, position, mass);
+        let rigidBody = commons.createAmmoRigidBody(shape, this.mesh, 1,  0.5, position, mass);
 
         // Legger til physics world:
         this.myPhysicsWorld.addPhysicsObject(

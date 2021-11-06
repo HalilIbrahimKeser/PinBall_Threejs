@@ -106,7 +106,7 @@ export const flipperLeft = {
 		this.stickMesh.receiveShadow = true;
 		//AMMO, kube/stick:
 		let stickColShape =  new Ammo.btBoxShape( new Ammo.btVector3( sizeStick.y/2, sizeStick.x/2, sizeStick.z/2 ) );
-		this.rbStick = commons.createAmmoRigidBody(stickColShape, this.stickMesh, 0.4, 0.9, posStick, massStick);
+		this.rbStick = commons.createAmmoRigidBody(stickColShape, this.stickMesh, 1, 0.3, posStick, massStick);
 		this.myPhysicsWorld.addPhysicsObject(
 			this.rbStick,
 			this.stickMesh,
