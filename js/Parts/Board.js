@@ -307,7 +307,7 @@ export const board= {
     addAmmo(mesh, rigidBody, groupMesh, restitution, friction, position, mass, collisionMask){
         let compoundShape = new Ammo.btCompoundShape();
         commons.createTriangleShapeAddToCompound(compoundShape, mesh);
-        rigidBody= commons.createAmmoRigidBody(compoundShape, groupMesh, 0.05, 0.3, position, mass);
+        rigidBody= commons.createAmmoRigidBody(compoundShape, groupMesh, restitution, friction, position, mass);
         rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | 2);
         rigidBody.setActivationState(4);
 
