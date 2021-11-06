@@ -11,6 +11,7 @@ export const board= {
     myPhysicsWorld: undefined,
     //Rigid bodies for physics
     gameBoardRigidBody: undefined,
+    bottom2Rigid: undefined,
     bottomBoardRigidBody: undefined,
     coverBoardRigidBody: undefined,
     startRampRigidBody: undefined,
@@ -42,6 +43,8 @@ export const board= {
         hole1.lineTo( 5, this.TERRAIN_SIZE * 3.5 -5 );
         hole1.lineTo( this.TERRAIN_SIZE * 2-5, this.TERRAIN_SIZE * 3.5-5 );
         hole1.lineTo( this.TERRAIN_SIZE * 2-5, 5 );
+        hole1.lineTo( this.TERRAIN_SIZE * 2-25, 5 );
+        hole1.lineTo( (this.TERRAIN_SIZE * 2-5)/2-5, -15 );
         hole1.lineTo( 5, 5 );
         let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
         let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
@@ -54,15 +57,33 @@ export const board= {
         groupMesh.add( frameBoardMesh );
 
         //BOTTOM
+        let hole2 = new THREE.Shape();
+        hole2.moveTo(5, 5);
+        hole2.lineTo(5, 8);
+        hole2.lineTo(this.TERRAIN_SIZE * 2.5-73, 8);
+        hole2.lineTo(this.TERRAIN_SIZE * 2.5-73, 5);
+        hole2.lineTo((this.TERRAIN_SIZE * 2-5)/2-5, -15);
+        hole2.lineTo(5, 5);
         let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
         let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
-        let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 5, true, 1,1, 0, 1, bottomBoardMaterial);
+        bottomBoardShape.holes.push(hole2);
+        let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 7, true, 1,1, 0, 1, bottomBoardMaterial);
         bottomBoardMesh.rotation.x = -Math.PI / 2;
         bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
         bottomBoardMesh.position.z = this.TERRAIN_SIZE;
+        bottomBoardMesh.position.y = -2;
         bottomBoardMesh.receiveShadow = true;
         groupMesh.add( bottomBoardMesh );
 
+        let bottom2Material = new THREE.MeshPhongMaterial( { color: 0xea660d, side: THREE.DoubleSide } );
+        let bottom2Shape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
+        let bottom2Mesh = this.createExtrudeMesh(bottom2Shape, 1, 1, true, 0.1,1, 0, 1, bottom2Material);
+        bottom2Mesh.rotation.x = -Math.PI / 2;
+        bottom2Mesh.position.x = -this.TERRAIN_SIZE;
+        bottom2Mesh.position.z = this.TERRAIN_SIZE;
+        bottom2Mesh.position.y = -2;
+        bottom2Mesh.receiveShadow = true;
+        groupMesh.add( bottom2Mesh);
 
         //GLASS COVER; Ingen AMMO, dvs ballen kan komme gjennom
         let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
@@ -79,11 +100,13 @@ export const board= {
 
         //RAMP on the right
         let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
-        let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3.5-75);
-        let startRampMesh = this.createExtrudeMesh(startRampShape, 1, 15, true, 1,1,0, 1, startRampMaterial);
-        startRampMesh.rotation.x = -Math.PI / 2;
-        startRampMesh.position.x = this.TERRAIN_SIZE - 25;
-        startRampMesh.position.z = this.TERRAIN_SIZE - 5;
+        //let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3.5-75);
+        //let startRampMesh = this.createExtrudeMesh(startRampShape, 1, 15, true, 1,1,0, 1, startRampMaterial);
+        let startRampMesh = this.makeSimpleBoxMesh(7, 10, 280, startRampMaterial);
+        //startRampMesh.rotation.x = -Math.PI / 2;
+        startRampMesh.position.x = 83;
+        startRampMesh.position.y = 10;
+        startRampMesh.position.z = -40;
         startRampMesh.receiveShadow = true;
         groupMesh.add(startRampMesh);
 
@@ -110,7 +133,7 @@ export const board= {
         upperLeftConcaveMesh.receiveShadow = true;
         groupMesh.add(upperLeftConcaveMesh);
 
-        // lower boundaries
+        // lower boundaries (Actually right)
         let concaveMaterial = new THREE.MeshPhongMaterial( { color: 0x6735e5, side: THREE.DoubleSide } );
         let lowerLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
         lowerLeftConcaveMesh.scale.x = 13;
@@ -118,10 +141,11 @@ export const board= {
         lowerLeftConcaveMesh.rotation.x = -Math.PI / 2;
         lowerLeftConcaveMesh.rotation.z = 0.78;
         lowerLeftConcaveMesh.position.z =  55;
-        lowerLeftConcaveMesh.position.x =  33;
+        lowerLeftConcaveMesh.position.x =  37;
         lowerLeftConcaveMesh.receiveShadow = true;
         groupMesh.add(lowerLeftConcaveMesh);
 
+        //Actually left
         let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
         lowerRightConcaveMesh.scale.x = 13;
         lowerRightConcaveMesh.scale.y = 9;
@@ -204,7 +228,7 @@ export const board= {
         let middleRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
         let middleRightRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, middleRightRectangleMaterial);
         middleRightRectangleMesh.position.y = 7;
-        middleRightRectangleMesh.position.x = 65;
+        middleRightRectangleMesh.position.x = 67;
         middleRightRectangleMesh.position.z = -75;
         middleRightRectangleMesh.rotation.y = Math.PI/1.4
         groupMesh.add(middleRightRectangleMesh);
@@ -212,7 +236,7 @@ export const board= {
         let middleRightRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
         let middleRightRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, middleRightRectangleMaterial2);
         middleRightRectangleMesh2.position.y = 7;
-        middleRightRectangleMesh2.position.x = 65;
+        middleRightRectangleMesh2.position.x = 67;
         middleRightRectangleMesh2.position.z = -65;
         middleRightRectangleMesh2.rotation.y = Math.PI/2
         groupMesh.add(middleRightRectangleMesh2);
@@ -260,6 +284,7 @@ export const board= {
         this.addAmmo(frameBoardMesh, this.gameBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo: bottom
         this.addAmmo(bottomBoardMesh, this.bottomBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(bottom2Mesh, this.bottom2Rigid, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo Cover
         this.addAmmo(coverBoardMesh, this.coverBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo Ramp
@@ -304,7 +329,7 @@ export const board= {
         );
     },
 
-    //Creates a rectangular shape
+    //Creates a board shape with sharp bottom
     createThreeShape(length, width) {
         //let length = this.TERRAIN_SIZE * 2;
         //let width = this.TERRAIN_SIZE * 3;
@@ -313,6 +338,8 @@ export const board= {
         shape.lineTo( 0, width );
         shape.lineTo( length, width );
         shape.lineTo( length, 0 );
+        shape.lineTo( length-20, 0 );
+        shape.lineTo(length/2-7, -20);
         shape.lineTo( 0, 0 );
         return shape;
     },
