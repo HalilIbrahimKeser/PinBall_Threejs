@@ -323,11 +323,11 @@ export const board= {
         //top Right Cylinder
         this.addAmmo(topRightCylinderMesh, this.topRightCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
         //top Middle Left Cylinder
-        this.addAmmo(topMiddleLeftCylinderMesh, this.topMiddleLeftCylinderRigidBody, groupMesh, 2, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(topMiddleLeftCylinderMesh, this.topMiddleLeftCylinderRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
         //top Right Cylinder
-        this.addAmmo(topMiddleCylinderMesh, this.topMiddleCylinderRigidBody, groupMesh, 2, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(topMiddleCylinderMesh, this.topMiddleCylinderRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
         //top Middle Left Cylinder
-        this.addAmmo(topMiddleRightCylinderMesh, this.topMiddleRightCylinderRigidBody, groupMesh, 2, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(topMiddleRightCylinderMesh, this.topMiddleRightCylinderRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
 
         //middle Left Rectangle
         this.addAmmo(middleLeftRectangleMesh, this.middleLeftRectangleRigidBody, groupMesh, 0.1, 0.3, position, mass, setCollisionMask);
@@ -343,7 +343,7 @@ export const board= {
         this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 0.05   , 0.3, position, mass, setCollisionMask);
 
         //heart Shape
-        this.addAmmo(heartMesh, this.heartShapeRigidBody, groupMesh, 2, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(heartMesh, this.heartShapeRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
     },
 
     //Prepares rigid body for addition to Physics World
