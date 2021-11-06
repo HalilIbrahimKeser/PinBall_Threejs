@@ -31,6 +31,22 @@ export const board= {
         const position = {x:0, y:0, z:50};
         const mass = 0;
 
+        let mPMaterial = {
+            babyBlue: new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } ),
+            yellow: new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } ),
+            darkGray: new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } ),
+            red: new THREE.MeshPhongMaterial( { color: 0xcc0000, side: THREE.DoubleSide } ),
+            glass: new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide} ),
+            darkPink: new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } ),
+            lightPurple: new THREE.MeshPhongMaterial( { color: 0x6735e5, side: THREE.DoubleSide } ),
+            lightOrange:  new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide}),
+            lightYellow: new THREE.MeshPhongMaterial( { color: 0xe4d190, side: THREE.DoubleSide } ),
+            lightGreen: new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } )
+        }
+        mPMaterial.glass.transparent = true;
+        mPMaterial.glass.opacity = 0.1;
+
+
         //THREE, bruker Shape og ExtrudeGeometry:
         let groupMesh = new THREE.Group();
         groupMesh.userData.tag = 'gameboard';
@@ -46,10 +62,10 @@ export const board= {
         hole1.lineTo( this.TERRAIN_SIZE * 2-25, 5 );
         hole1.lineTo( (this.TERRAIN_SIZE * 2-5)/2-5, -15 );
         hole1.lineTo( 5, 5 );
-        let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
+        //let frameBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x3d85c6, side: THREE.DoubleSide } );
         let frameShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
         frameShape.holes.push(hole1);
-        let frameBoardMesh = this.createExtrudeMesh(frameShape, 1, 15, true, 1, 1,0,1,frameBoardMaterial);
+        let frameBoardMesh = this.createExtrudeMesh(frameShape, 1, 15, true, 1, 1,0,1, mPMaterial.babyBlue);
         frameBoardMesh.rotation.x = -Math.PI / 2;
         frameBoardMesh.position.x = -this.TERRAIN_SIZE;
         frameBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -64,10 +80,10 @@ export const board= {
         hole2.lineTo(this.TERRAIN_SIZE * 2.5-73, 5);
         hole2.lineTo((this.TERRAIN_SIZE * 2-5)/2-5, -15);
         hole2.lineTo(5, 5);
-        let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
+        //let bottomBoardMaterial = new THREE.MeshPhongMaterial( { color: 0x121212, side: THREE.DoubleSide } );
         let bottomBoardShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
         bottomBoardShape.holes.push(hole2);
-        let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 7, true, 1,1, 0, 1, bottomBoardMaterial);
+        let bottomBoardMesh = this.createExtrudeMesh(bottomBoardShape, 1, 7, true, 1,1, 0, 1, mPMaterial.darkGray);
         bottomBoardMesh.rotation.x = -Math.PI / 2;
         bottomBoardMesh.position.x = -this.TERRAIN_SIZE;
         bottomBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -75,9 +91,9 @@ export const board= {
         bottomBoardMesh.receiveShadow = true;
         groupMesh.add( bottomBoardMesh );
 
-        let bottom2Material = new THREE.MeshPhongMaterial( { color: 0xea660d, side: THREE.DoubleSide } );
+        //let bottom2Material = new THREE.MeshPhongMaterial( { color: 0xcc0000, side: THREE.DoubleSide } );
         let bottom2Shape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
-        let bottom2Mesh = this.createExtrudeMesh(bottom2Shape, 1, 1, true, 0.1,1, 0, 1, bottom2Material);
+        let bottom2Mesh = this.createExtrudeMesh(bottom2Shape, 1, 1, true, 0.1,1, 0, 1, mPMaterial.red);
         bottom2Mesh.rotation.x = -Math.PI / 2;
         bottom2Mesh.position.x = -this.TERRAIN_SIZE;
         bottom2Mesh.position.z = this.TERRAIN_SIZE;
@@ -86,11 +102,11 @@ export const board= {
         groupMesh.add( bottom2Mesh);
 
         //GLASS COVER; Ingen AMMO, dvs ballen kan komme gjennom
-        let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
+        /*let coverBoardMaterial = new THREE.MeshPhongMaterial( { color: 0xeeeeee, side: THREE.DoubleSide } );
         coverBoardMaterial.transparent = true;
-        coverBoardMaterial.opacity = 0.1;
+        coverBoardMaterial.opacity = 0.1;*/
         let coverShape = this.createThreeShape(this.TERRAIN_SIZE*2, this.TERRAIN_SIZE*3.5);
-        let coverBoardMesh = this.createExtrudeMesh(coverShape, 1, 0.3, true, 1, 1, 0, 1, coverBoardMaterial);
+        let coverBoardMesh = this.createExtrudeMesh(coverShape, 1, 0.3, true, 1, 1, 0, 1, mPMaterial.glass);
         coverBoardMesh.rotation.x = -Math.PI / 2;
         coverBoardMesh.position.x = -this.TERRAIN_SIZE;
         coverBoardMesh.position.z = this.TERRAIN_SIZE;
@@ -99,11 +115,8 @@ export const board= {
         groupMesh.add( coverBoardMesh );
 
         //RAMP on the right
-        let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
-        //let startRampShape = this.createThreeShape(10, this.TERRAIN_SIZE*3.5-75);
-        //let startRampMesh = this.createExtrudeMesh(startRampShape, 1, 15, true, 1,1,0, 1, startRampMaterial);
-        let startRampMesh = this.makeSimpleBoxMesh(7, 10, 280, startRampMaterial);
-        //startRampMesh.rotation.x = -Math.PI / 2;
+        //let startRampMaterial = new THREE.MeshPhongMaterial( { color: 0xF31CEC, side: THREE.DoubleSide } );
+        let startRampMesh = this.makeSimpleBoxMesh(7, 10, 280, mPMaterial.darkPink);
         startRampMesh.position.x = 83;
         startRampMesh.position.y = 10;
         startRampMesh.position.z = -40;
@@ -112,7 +125,7 @@ export const board= {
 
         //Top right Corner
         let concaveShape = this.createConcaveShape();
-        let upperRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, frameBoardMaterial);
+        let upperRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, mPMaterial.babyBlue);
         upperRightConcaveMesh.scale.x = 15;
         upperRightConcaveMesh.scale.y = 15;
         upperRightConcaveMesh.rotation.x = -Math.PI / 2;
@@ -123,7 +136,7 @@ export const board= {
         groupMesh.add(upperRightConcaveMesh);
 
         //Top left corner
-        let upperLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, frameBoardMaterial);
+        let upperLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, mPMaterial.babyBlue);
         upperLeftConcaveMesh.scale.x = 15;
         upperLeftConcaveMesh.scale.y = 15;
         upperLeftConcaveMesh.rotation.x = -Math.PI / 2;
@@ -134,8 +147,8 @@ export const board= {
         groupMesh.add(upperLeftConcaveMesh);
 
         // lower boundaries (Actually right)
-        let concaveMaterial = new THREE.MeshPhongMaterial( { color: 0x6735e5, side: THREE.DoubleSide } );
-        let lowerLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
+        //let concaveMaterial = new THREE.MeshPhongMaterial( { color: 0x6735e5, side: THREE.DoubleSide } );
+        let lowerLeftConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, mPMaterial.lightPurple);
         lowerLeftConcaveMesh.scale.x = 13;
         lowerLeftConcaveMesh.scale.y = 9;
         lowerLeftConcaveMesh.rotation.x = -Math.PI / 2;
@@ -146,7 +159,7 @@ export const board= {
         groupMesh.add(lowerLeftConcaveMesh);
 
         //Actually left
-        let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
+        let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, mPMaterial.lightPurple);
         lowerRightConcaveMesh.scale.x = 13;
         lowerRightConcaveMesh.scale.y = 9;
         lowerRightConcaveMesh.rotation.x = -Math.PI / 2;
@@ -157,10 +170,10 @@ export const board= {
         groupMesh.add(lowerRightConcaveMesh);
 
 
-        let springConstraintMaterial = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
+        //let springConstraintMaterial = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
 
         let springConstraintMesh = this.createSpringConstraint( 0,20,
-            {x: 90, y: 15, z: 91}, {x: 90, y: 15, z: 50}, {x: 7, y: 7, z: 7}, springConstraintMaterial);
+            {x: 90, y: 15, z: 91}, {x: 90, y: 15, z: 50}, {x: 7, y: 7, z: 7}, mPMaterial.lightOrange, mPMaterial.lightYellow);
         groupMesh.add(springConstraintMesh.springCubeMesh1);
         groupMesh.add(springConstraintMesh.springCubeMesh2);
 
@@ -169,38 +182,38 @@ export const board= {
         //Cylinders top of board
 
         // Top left cone
-        let topLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let topLeftCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, topLeftCylinderMaterial);
+        //let topLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topLeftCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topLeftCylinderMesh.position.y = 7;
         topLeftCylinderMesh.position.z = -200;
         topLeftCylinderMesh.position.x = -70;
         groupMesh.add(topLeftCylinderMesh);
 
         // Top right cone
-        let topRightCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let topRightCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, topRightCylinderMaterial);
+        //let topRightCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topRightCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topRightCylinderMesh.position.y = 7;
         topRightCylinderMesh.position.z = -200;
         topRightCylinderMesh.position.x = 60;
         groupMesh.add(topRightCylinderMesh);
 
         // Middle cylinders
-        let topMiddleLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let topMiddleLeftCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleLeftCylinderMaterial);
+        //let topMiddleLeftCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topMiddleLeftCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleLeftCylinderMesh.position.y = 7;
         topMiddleLeftCylinderMesh.position.z = -180;
         topMiddleLeftCylinderMesh.position.x = 30;
         groupMesh.add(topMiddleLeftCylinderMesh);
 
-        let topMiddleCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let topMiddleCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleCylinderMaterial);
+        //let topMiddleCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
+        let topMiddleCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleCylinderMesh.position.y = 7;
         topMiddleCylinderMesh.position.z = -180;
         topMiddleCylinderMesh.position.x = -5;
         groupMesh.add(topMiddleCylinderMesh);
 
         let topMiddleRightCylinderMaterial = new THREE.MeshPhongMaterial( { color: 0xf4d800, side: THREE.DoubleSide } );
-        let topMiddleRightCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, topMiddleRightCylinderMaterial);
+        let topMiddleRightCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleRightCylinderMesh.position.y = 7;
         topMiddleRightCylinderMesh.position.z = -180;
         topMiddleRightCylinderMesh.position.x = -40;
@@ -208,16 +221,16 @@ export const board= {
 
         //Middle section
         //Middle Left
-        let middleLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let middleLeftRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, middleLeftRectangleMaterial);
+        //let middleLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleLeftRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, mPMaterial.lightGreen);
         middleLeftRectangleMesh.position.y = 7;
         middleLeftRectangleMesh.position.x = -85;
         middleLeftRectangleMesh.position.z = -75;
         middleLeftRectangleMesh.rotation.y = Math.PI/3.6
         groupMesh.add(middleLeftRectangleMesh);
 
-        let middleLeftRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let middleLeftRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, middleLeftRectangleMaterial2);
+        //let middleLeftRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleLeftRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, mPMaterial.lightGreen);
         middleLeftRectangleMesh2.position.y = 7;
         middleLeftRectangleMesh2.position.x = -85;
         middleLeftRectangleMesh2.position.z = -65;
@@ -225,16 +238,16 @@ export const board= {
         groupMesh.add(middleLeftRectangleMesh2);
 
         //Middle right
-        let middleRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let middleRightRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, middleRightRectangleMaterial);
+        //let middleRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleRightRectangleMesh = this.makeSimpleBoxMesh(2, 15, 30, mPMaterial.lightGreen);
         middleRightRectangleMesh.position.y = 7;
         middleRightRectangleMesh.position.x = 67;
         middleRightRectangleMesh.position.z = -75;
         middleRightRectangleMesh.rotation.y = Math.PI/1.4
         groupMesh.add(middleRightRectangleMesh);
 
-        let middleRightRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let middleRightRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, middleRightRectangleMaterial2);
+        //let middleRightRectangleMaterial2 = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let middleRightRectangleMesh2 = this.makeSimpleBoxMesh(2, 15, 25, mPMaterial.lightGreen);
         middleRightRectangleMesh2.position.y = 7;
         middleRightRectangleMesh2.position.x = 67;
         middleRightRectangleMesh2.position.z = -65;
@@ -243,8 +256,8 @@ export const board= {
 
         //Lower rectangles over arms
         //Lower left arm
-        let lowerLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerLeftRectangleMaterial);
+        //let lowerLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, mPMaterial.lightGreen);
         lowerLeftRectangleMesh.position.y = 7;
         lowerLeftRectangleMesh.position.x = -50;
         lowerLeftRectangleMesh.position.z = 15;
@@ -252,8 +265,8 @@ export const board= {
         groupMesh.add(lowerLeftRectangleMesh);
 
         // Lower right arm
-        let lowerRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerRightRectangleMaterial);
+        //let lowerRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
+        let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, mPMaterial.lightGreen);
         lowerRightRectangleMesh.position.y = 7;
         lowerRightRectangleMesh.position.x = 30;
         lowerRightRectangleMesh.position.z = 15;
@@ -264,7 +277,7 @@ export const board= {
 
         //Heart example
         let heartShape = this.createHeartShape();
-        let heartMesh = this.createExtrudeMesh(heartShape, 1, 15, false, 0.1, 1, 0, 1, startRampMaterial);
+        let heartMesh = this.createExtrudeMesh(heartShape, 1, 15, false, 0.1, 1, 0, 1, mPMaterial.darkPink);
         heartMesh.rotation.x = -Math.PI/2;
         heartMesh.rotation.z = -Math.PI;
         heartMesh.scale.x = 0.2;
@@ -359,21 +372,22 @@ export const board= {
         return extrudeMesh;
     },
 
-    createSpringConstraint(mass1, mass2, pos1, pos2, size, material) {
+    createSpringConstraint(mass1, mass2, pos1, pos2, size, material1, material2) {
         let sprConsSettings = {
             mass1 : mass1,
             mass2 : mass2,
             pos1 : pos1,
             pos2 : pos2,
             size : size,
-            material : material
+            material1 : material1,
+            material2: material2
         };
 
-        let springCubeMesh1 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z), material);
+        let springCubeMesh1 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z), sprConsSettings.material1);
         springCubeMesh1.position.set(sprConsSettings.pos1.x, sprConsSettings.pos1.y, sprConsSettings.pos1.z);
 
         let springCubeMesh2 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z),
-            new THREE.MeshPhongMaterial( { color: 0xe4d190, side: THREE.DoubleSide } ));
+            sprConsSettings.material2);
         springCubeMesh2.position.set(sprConsSettings.pos2.x, sprConsSettings.pos2.y, sprConsSettings.pos2.z);
 
         // Ammo: samme shape brukes av begge RBs:
