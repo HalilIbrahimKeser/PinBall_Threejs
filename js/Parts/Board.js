@@ -23,6 +23,17 @@ export const board= {
 
     TERRAIN_SIZE: 100,
 
+    //Spring
+    springConstraintBox1: undefined,
+    springConstraintBox2: undefined,
+    springPos1 : undefined,
+    springPos2 : undefined,
+    IMPULSE_FORCE_STICK: 60,
+    springCubeMesh1 : undefined,
+    springCubeMesh2 : undefined,
+    springConstraintMesh: undefined,
+    threeDirectionVectorStick: undefined,
+
     init(myPhysicsWorld) {
         this.myPhysicsWorld = myPhysicsWorld;
     },
@@ -30,6 +41,8 @@ export const board= {
     create(setCollisionMask=true) {
         const position = {x:0, y:0, z:50};
         const mass = 0;
+        let PI = Math.PI;
+
 
         //THREE, bruker Shape og ExtrudeGeometry:
         let groupMesh = new THREE.Group();
@@ -146,7 +159,7 @@ export const board= {
         groupMesh.add(lowerLeftConcaveMesh);
 
         //Actually left
-        let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 15, false, 0.1, 1, 0, 1, concaveMaterial);
+        let lowerRightConcaveMesh = this.createExtrudeMesh(concaveShape, 1, 30, false, 0.1, 1, 0, 1, concaveMaterial);
         lowerRightConcaveMesh.scale.x = 13;
         lowerRightConcaveMesh.scale.y = 9;
         lowerRightConcaveMesh.rotation.x = -Math.PI / 2;
@@ -156,16 +169,17 @@ export const board= {
         lowerRightConcaveMesh.receiveShadow = true;
         groupMesh.add(lowerRightConcaveMesh);
 
-
-        let springConstraintMaterial = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
-
-        let springConstraintMesh = this.createSpringConstraint( 0,20,
-            {x: 90, y: 15, z: 91}, {x: 90, y: 15, z: 50}, {x: 7, y: 7, z: 7}, springConstraintMaterial);
-        groupMesh.add(springConstraintMesh.springCubeMesh1);
-        groupMesh.add(springConstraintMesh.springCubeMesh2);
+        // Spring
+        let springConstraintMaterial1 = new THREE.MeshPhongMaterial({color: 0xf78a1d, side: THREE.DoubleSide});
+        let springConstraintMaterial2 = new THREE.MeshPhongMaterial( {color: 0xe4d190, side: THREE.DoubleSide })
+        this.springPos1 = {x: 91, y: 10, z: 95};
+        this.springPos2 = {x: 91, y: 10, z: 10};
+        this.springConstraintMesh = this.createSpringConstraint( 0,10,
+            this.springPos1, this.springPos2, {x: 10, y: 0.1, z: 0.1}, {radius: 4, withSegments: 32}, springConstraintMaterial1, springConstraintMaterial2);
+        groupMesh.add(this.springConstraintMesh.springCubeMesh1); //Får 2 stk Mesh i retur. Nummer 1.
+        groupMesh.add(this.springConstraintMesh.springCubeMesh2); //Nummer 2.
 
         /**********Shapes and obstacles**********/
-
         //Cylinders top of board
 
         // Top left cone
@@ -244,19 +258,19 @@ export const board= {
         //Lower rectangles over arms
         //Lower left arm
         let lowerLeftRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerLeftRectangleMaterial);
+        let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 30, lowerLeftRectangleMaterial);
         lowerLeftRectangleMesh.position.y = 7;
-        lowerLeftRectangleMesh.position.x = -50;
-        lowerLeftRectangleMesh.position.z = 15;
+        lowerLeftRectangleMesh.position.x = -80;
+        lowerLeftRectangleMesh.position.z = 3;
         lowerLeftRectangleMesh.rotation.y = Math.PI/3.6
         groupMesh.add(lowerLeftRectangleMesh);
 
         // Lower right arm
         let lowerRightRectangleMaterial = new THREE.MeshPhongMaterial( { color: 0x48ca10, side: THREE.DoubleSide } );
-        let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 60, lowerRightRectangleMaterial);
+        let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 30, lowerRightRectangleMaterial);
         lowerRightRectangleMesh.position.y = 7;
-        lowerRightRectangleMesh.position.x = 30;
-        lowerRightRectangleMesh.position.z = 15;
+        lowerRightRectangleMesh.position.x = 60;
+        lowerRightRectangleMesh.position.z = 5;
         lowerRightRectangleMesh.rotation.y = Math.PI/1.4
         groupMesh.add(lowerRightRectangleMesh);
 
@@ -298,9 +312,10 @@ export const board= {
         // Lower right middle concave
         this.addAmmo(lowerRightConcaveMesh, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         // Spring constraint
-        this.addAmmo(springConstraintMesh.springCubeMesh1, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        this.addAmmo(springConstraintMesh.springCubeMesh2, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-
+        this.addAmmo(this.springCubeMesh1, this.springConstraintBox1, groupMesh, 0.1, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(this.springCubeMesh2, this.springConstraintBox2, groupMesh, 1, 0.3, position, mass, setCollisionMask);
+        //topLeftCylinderMesh
+        this.addAmmo(topLeftCylinderMesh, this.springConstraintBox2, groupMesh, 1, 0.3, position, mass, setCollisionMask);
     },
 
     //Prepares rigid body for addition to Physics World
@@ -359,57 +374,74 @@ export const board= {
         return extrudeMesh;
     },
 
-    createSpringConstraint(mass1, mass2, pos1, pos2, size, material) {
+    createSpringConstraint(mass1, mass2, pos1, pos2, size1, size2, material1, material2) {
+        /** Eksempel hentet fra Werner sin MySpring.js*/
         let sprConsSettings = {
             mass1 : mass1,
             mass2 : mass2,
             pos1 : pos1,
             pos2 : pos2,
-            size : size,
-            material : material
+            size1 : size1,
+            size2 : size2,
+            material1 : material1,
+            material2 : material2
         };
 
-        let springCubeMesh1 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z), material);
-        springCubeMesh1.position.set(sprConsSettings.pos1.x, sprConsSettings.pos1.y, sprConsSettings.pos1.z);
+        this.springCubeMesh1 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size1.x, sprConsSettings.size1.y, sprConsSettings.size1.z), material1);
+        this.springCubeMesh1.position.set(sprConsSettings.pos1.x, sprConsSettings.pos1.y, sprConsSettings.pos1.z);
 
-        let springCubeMesh2 = new THREE.Mesh(new THREE.BoxGeometry(sprConsSettings.size.x, sprConsSettings.size.y, sprConsSettings.size.z),
-            new THREE.MeshPhongMaterial( { color: 0xe4d190, side: THREE.DoubleSide } ));
-        springCubeMesh2.position.set(sprConsSettings.pos2.x, sprConsSettings.pos2.y, sprConsSettings.pos2.z);
+        this.springCubeMesh2 = new THREE.Mesh(new THREE.SphereGeometry(sprConsSettings.size2.radius, sprConsSettings.size2.withSegments), material2);
+        this.springCubeMesh2.position.set(sprConsSettings.pos2.x, sprConsSettings.pos2.y, sprConsSettings.pos2.z);
 
         // Ammo: samme shape brukes av begge RBs:
-        let boxShape = new Ammo.btBoxShape(
-            new Ammo.btVector3( sprConsSettings.size.x/2, sprConsSettings.size.y/2, sprConsSettings.size.z/2 ) );
+        let boxShape = new Ammo.btBoxShape(new Ammo.btVector3( sprConsSettings.size1.x/2, sprConsSettings.size1.y/2, sprConsSettings.size1.z/2 ) );
+        let sphereShape = new Ammo.btSphereShape(sprConsSettings.size2.radius);
 
-        let rbBox1 = commons.createAmmoRigidBody(boxShape, springCubeMesh1, 0.4, 0.6, sprConsSettings.pos1, sprConsSettings.mass1);
-        let rbBox2 = commons.createAmmoRigidBody(boxShape, springCubeMesh2, 0.4, 0.6, sprConsSettings.pos2, sprConsSettings.mass2);
+        // Rigid body
+        this.springConstraintBox1 = commons.createAmmoRigidBody(boxShape, this.springCubeMesh1, 1, 0.3, sprConsSettings.pos1, sprConsSettings.mass1);
+        this.springConstraintBox2 = commons.createAmmoRigidBody(sphereShape, this.springCubeMesh2, 1, 0.3, sprConsSettings.pos2, sprConsSettings.mass2);
 
         //FJÆR MELLOM box1 og 2: https://stackoverflow.com/questions/46671809/how-to-make-a-spring-constraint-with-bullet-physics
         let transform1 = new Ammo.btTransform();
         transform1.setIdentity();
-        transform1.setOrigin( new Ammo.btVector3( 0, -1, 0 ) );
+        transform1.setOrigin( new Ammo.btVector3( 0, 0, -1 ) );
+
         let transform2 = new Ammo.btTransform();
         transform2.setIdentity();
         transform2.setOrigin( new Ammo.btVector3( 0, 0, 0 ) );
 
         let springConstraint = new Ammo.btGeneric6DofSpringConstraint(
-            rbBox1,
-            rbBox2,
+            this.springConstraintBox1,
+            this.springConstraintBox2,
             transform1,
             transform2,
             true);
 
-        springConstraint.setLinearLowerLimit(new Ammo.btVector3(0.0, 1.0, 0.0));
+        // Removing any restrictions on the y-coordinate of the hanging box
+        // by setting the lower limit above the upper one.
+        springConstraint.setLinearLowerLimit(new Ammo.btVector3(0.0, 0.0, 1.0));
         springConstraint.setLinearUpperLimit(new Ammo.btVector3(0.0, 0.0, 0.0));
 
+        // Disse gjør at den hengende boksen ikke roterer når den er festet til en constraint (se side 130 i Bullet-boka).
         springConstraint.setAngularLowerLimit(new Ammo.btVector3(0, 0.0, 0.0));
         springConstraint.setAngularUpperLimit(new Ammo.btVector3(0, 0.0, 0.0));
 
-        springConstraint.enableSpring(1,  true);    // Translation on y-axis
+        // 0 : translation X
+        // 1 : translation Y
+        // 2 : translation Z
+        //springConstraint.enableSpring(0, false);
+        springConstraint.enableSpring(2, true);    // Translation on z-axis
 
-        springConstraint.setStiffness(1, 55);
+        springConstraint.setStiffness(2, 60);
 
-        springConstraint.setDamping  (1,  0.9);
+        springConstraint.setDamping(2, 0.01);
 
+        this.myPhysicsWorld.ammoPhysicsWorld.addConstraint( springConstraint, false );
+        this.myPhysicsWorld.addPhysicsObject(this.springConstraintBox1, this.springCubeMesh1);
+        this.myPhysicsWorld.addPhysicsObject(this.springConstraintBox2, this.springCubeMesh2);
+
+        let springCubeMesh1 = this.springCubeMesh1;
+        let springCubeMesh2 = this.springCubeMesh2;
         return { springCubeMesh1, springCubeMesh2 }
     },
 
@@ -458,6 +490,39 @@ export const board= {
         heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
         heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
         return heartShape;
+    },
+
+    activateSpring() {
+        //Hentet fra MySpring.js
+        this.springConstraintBox2.activate(true)
+        let tmp = this.getCentralImpulse();
+        let direction = new THREE.Vector3(-tmp.x, -tmp.y, -tmp.z);
+        let rdv1 = new Ammo.btVector3(direction.x * this.IMPULSE_FORCE_STICK , direction.y * this.IMPULSE_FORCE_STICK , direction.z * this.IMPULSE_FORCE_STICK );
+        this.springConstraintBox2.applyCentralImpulse( rdv1 );
+    },
+
+    getCentralImpulse() {
+        //Hentet fra MySpring.js
+
+        let tmpTrans = new Ammo.btTransform();
+
+        // 1. Henter gjeldende rotasjon for "sticken"/kuben (Ammo):
+        let ms1 = this.springConstraintBox2.getMotionState();
+        ms1.getWorldTransform( tmpTrans );
+        let q1 = tmpTrans.getRotation();        // q1 inneholder nå stickens rotasjon.
+        // 2. Lager en (THREE) vektor som peker i samme retning som sticken:
+        this.threeDirectionVectorStick = new THREE.Vector3(0,0,1);
+        //   2.1 Lager en THREE-kvaternion for rotasjon basert på Ammo-kvaternionen (q1) over:
+        let threeQuaternionStick = new THREE.Quaternion(q1.x(), q1.y(), q1.z(), q1.w());
+        //   2.2 Roterer (THREE) retningsvektoren slik at den peker i samme retning som sticken:
+        this.threeDirectionVectorStick.applyQuaternion(threeQuaternionStick);
+
+        // 3. Lager vektorer som står vinkelrett på threeDirectionVectorStick vha. mesh.getWorldDirection():
+        // Disse brukes igjen til å dytte sticken vha. applyCentralImpulse()
+        let threeDirection = new THREE.Vector3();
+        this.springCubeMesh2.getWorldDirection(threeDirection);  // NB! worldDIRECTION! Gir en vektor som peker mot Z. FRA DOC: Returns a vector representing the direction of object's positive z-axis in world space.
+
+        return threeDirection;
     },
 
     toRadians(degrees) {

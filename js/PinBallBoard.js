@@ -81,8 +81,12 @@ export const pinBallBoard = {
         if (this.currentlyPressedKeys[77] || this.currentlyPressedKeys[32]) {	//M og Space
             flipperRight.impulseLeft();
         }
-
-
+        if (this.currentlyPressedKeys[107] ) {	// +
+            ball.create();
+        }
+        if (this.currentlyPressedKeys[88] ) {	// X
+            board.activateSpring();
+        }
     },
 
     handleKeyUp(event) {

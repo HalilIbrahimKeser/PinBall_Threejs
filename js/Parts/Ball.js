@@ -14,7 +14,7 @@ export const ball = {
         this.myPhysicsWorld = myPhysicsWorld;
     },
 
-    create(setCollisionMask=true, position={x:91, y:20, z:10}, color=0xbcbcbc, mass= 10 ) {
+    create(setCollisionMask=true, position={x:90, y:20, z:10}, color= Math.random() * 0xbcbcbc, mass= 20 ) {
         let radius = 3.5;
 
         //THREE
@@ -30,7 +30,7 @@ export const ball = {
 
         //AMMO
         let shape = new Ammo.btSphereShape(radius);
-        let rigidBody = commons.createAmmoRigidBody(shape, this.mesh, 12,  0.5, position, mass);
+        let rigidBody = commons.createAmmoRigidBody(shape, this.mesh, 2,  0.5, position, mass);
 
         // Legger til physics world:
         this.myPhysicsWorld.addPhysicsObject(
