@@ -33,6 +33,8 @@ export const board= {
     lowerLeftRectangleRigidBody: undefined,
     lowerRightRectangleRigidBody: undefined,
 
+    heartShapeRigidBody: undefined,
+
     TERRAIN_SIZE: 100,
 
     //Spring
@@ -203,27 +205,23 @@ export const board= {
         topLeftCylinderMesh.position.z = -200;
         topLeftCylinderMesh.position.x = -70;
         groupMesh.add(topLeftCylinderMesh);
-
         // Top right cone
         let topRightCylinderMesh = this.makeCylinderMesh(10, 20, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topRightCylinderMesh.position.y = 7;
         topRightCylinderMesh.position.z = -200;
         topRightCylinderMesh.position.x = 60;
         groupMesh.add(topRightCylinderMesh);
-
         // Middle cylinders
         let topMiddleLeftCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleLeftCylinderMesh.position.y = 7;
         topMiddleLeftCylinderMesh.position.z = -180;
         topMiddleLeftCylinderMesh.position.x = 30;
         groupMesh.add(topMiddleLeftCylinderMesh);
-
         let topMiddleCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleCylinderMesh.position.y = 7;
         topMiddleCylinderMesh.position.z = -180;
         topMiddleCylinderMesh.position.x = -5;
         groupMesh.add(topMiddleCylinderMesh);
-
         let topMiddleRightCylinderMesh = this.makeCylinderMesh(10, 10, 15, 50, 1, false, 0, 6.3, mPMaterial.yellow);
         topMiddleRightCylinderMesh.position.y = 7;
         topMiddleRightCylinderMesh.position.z = -180;
@@ -266,7 +264,7 @@ export const board= {
         let lowerLeftRectangleMesh = this.makeSimpleBoxMesh(4, 15, 35, mPMaterial.lightGreen);
         lowerLeftRectangleMesh.position.y = 7;
         lowerLeftRectangleMesh.position.x = -85;
-        lowerLeftRectangleMesh.position.z = 5;
+        lowerLeftRectangleMesh.position.z = -10;
         lowerLeftRectangleMesh.rotation.y = Math.PI/3.6
         groupMesh.add(lowerLeftRectangleMesh);
 
@@ -274,10 +272,9 @@ export const board= {
         let lowerRightRectangleMesh = this.makeSimpleBoxMesh(4, 15, 35, mPMaterial.lightGreen);
         lowerRightRectangleMesh.position.y = 7;
         lowerRightRectangleMesh.position.x = 70;
-        lowerRightRectangleMesh.position.z = 5;
+        lowerRightRectangleMesh.position.z = -10;
         lowerRightRectangleMesh.rotation.y = Math.PI/1.4
         groupMesh.add(lowerRightRectangleMesh);
-
 
         /***********Start: Shape example codes, NO AMMOS***********************/
         //Heart example
@@ -298,6 +295,7 @@ export const board= {
 
 
         /**************Add Ammos********************************/
+
         //PhysicsAmmo: frame
         this.addAmmo(frameBoardMesh, this.gameBoardRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
         //PhysicsAmmo: bottom
@@ -326,23 +324,26 @@ export const board= {
         this.addAmmo(topRightCylinderMesh, this.topRightCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
         //top Middle Left Cylinder
         this.addAmmo(topMiddleLeftCylinderMesh, this.topMiddleLeftCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
-        //topRightCylinderRigidBody
-        this.addAmmo(topMiddleCylinderMesh, this.topRightCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
-        //topMiddleLeftCylinderRigidBody
-        this.addAmmo(topMiddleRightCylinderMesh, this.topMiddleLeftCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
-        //topMiddleCylinderRigidBody
-        this.addAmmo(middleLeftRectangleMesh, this.topMiddleCylinderRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //topMiddleRightCylinderRigidBody
-        this.addAmmo(middleLeftRectangleMesh2, this.topMiddleRightCylinderRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //middleLeftRectangleRigidBody
-        this.addAmmo(middleRightRectangleMesh, this.middleLeftRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //middleLeftRectangleRigidBody2
-        this.addAmmo(middleRightRectangleMesh2, this.middleLeftRectangleRigidBody2, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //lowerLeftRectangleRigidBody
+        //top Right Cylinder
+        this.addAmmo(topMiddleCylinderMesh, this.topMiddleCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
+        //top Middle Left Cylinder
+        this.addAmmo(topMiddleRightCylinderMesh, this.topMiddleRightCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
+
+        //middle Left Rectangle
+        this.addAmmo(middleLeftRectangleMesh, this.middleLeftRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //middle Left Rectangle 2
+        this.addAmmo(middleLeftRectangleMesh2, this.middleLeftRectangleRigidBody2, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //middle Right Rectangle
+        this.addAmmo(middleRightRectangleMesh, this.middleRightRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //middle Right Rectangle 2
+        this.addAmmo(middleRightRectangleMesh2, this.middleRightRectangleRigidBody2, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        //lower Left Rectangle
         this.addAmmo(lowerLeftRectangleMesh, this.lowerLeftRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
-        //lowerRightRectangleRigidBody
+        //lower Right Rectangle
         this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
 
+        //heart Shape
+        this.addAmmo(heartMesh, this.heartShapeRigidBody, groupMesh, 2, 0.3, position, mass, setCollisionMask);
     },
 
     //Prepares rigid body for addition to Physics World

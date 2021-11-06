@@ -84,7 +84,7 @@ export const pinBallBoard = {
         if (this.currentlyPressedKeys[107] ) {	// +
             ball.create();
         }
-        if (this.currentlyPressedKeys[88] ) {	// X
+        if (this.currentlyPressedKeys[88] || this.currentlyPressedKeys[13] ) {	// X and ENTER
             board.activateSpring();
         }
     },
