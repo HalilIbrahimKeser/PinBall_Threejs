@@ -14,7 +14,7 @@ export const ball = {
         this.myPhysicsWorld = myPhysicsWorld;
     },
 
-    create(setCollisionMask=true, position={x:90, y:30, z:10}, color= Math.random() * 0xbcbcbc, mass= 20 ) {
+    create(setCollisionMask=true, position={x:90, y:30, z:10}, color= Math.random() * 0xbcbcbc, mass= 10 ) {
         let radius = 3.5;
 
         //THREE

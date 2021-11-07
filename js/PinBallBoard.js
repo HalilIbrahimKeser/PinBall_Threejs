@@ -57,9 +57,6 @@ export const pinBallBoard = {
        },
 
     keyCheck(elapsed) {
-        if (this.currentlyPressedKeys[72]) {	//H
-            ball.createRandom(true);
-        }
         // Rotasjon om Z:
         if (this.currentlyPressedKeys[65]) {	//A
             //board.tilt(3, 0.03);
