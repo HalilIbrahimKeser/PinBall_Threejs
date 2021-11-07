@@ -188,8 +188,8 @@ export const board= {
         groupMesh.add(lowerRightConcaveMesh);
 
         // Spring
-        this.springPos1 = {x: 91, y: 10, z: 95};
-        this.springPos2 = {x: 91, y: 10, z: 10};
+        this.springPos1 = {x: 91, y: 10, z: 10};
+        this.springPos2 = {x: 91, y: 10, z: 90};
         this.springConstraintMesh = this.createSpringConstraint( 0,10,
             this.springPos1, this.springPos2, {x: 10, y: 0.1, z: 0.1}, {radius: 4, withSegments: 32}, mPMaterial.lightYellow, mPMaterial.lightYellow);
         groupMesh.add(this.springConstraintMesh.springCubeMesh1); //Får 2 stk Mesh i retur. Nummer 1.
@@ -457,7 +457,8 @@ export const board= {
         // 0 : translation X
         // 1 : translation Y
         // 2 : translation Z
-        //springConstraint.enableSpring(0, false);
+        springConstraint.enableSpring(0, true);
+        springConstraint.enableSpring(1, true);
         springConstraint.enableSpring(2, true);    // Translation on z-axis
 
         springConstraint.setStiffness(2, 60);
