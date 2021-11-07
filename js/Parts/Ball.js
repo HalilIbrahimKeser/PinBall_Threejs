@@ -48,12 +48,4 @@ export const ball = {
             this.myPhysicsWorld.COLLISION_GROUP_HINGE_SPHERE
         );
     },
-
-    createRandom(setCollisionMask=true, xzrange=200, height=50) {
-        let xPos = -(xzrange/2) + Math.random() * xzrange;
-        let zPos = -(xzrange/2) + Math.random() * xzrange;
-        let pos = {x: xPos, y: height, z: zPos};
-        let mass = 2 + Math.random() * 20;
-        this.create(setCollisionMask, pos, 0xff0505, mass);
-    },
 }
