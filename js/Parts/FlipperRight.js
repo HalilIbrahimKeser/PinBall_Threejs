@@ -77,6 +77,7 @@ export const flipperRight = {
 		anchorMesh.setRotationFromQuaternion(threeQuat);
 		anchorMesh.castShadow = true;
 		anchorMesh.receiveShadow = true;
+
 		//AMMO, kule:
 		let shapeAnchor = new Ammo.btSphereShape(radiusAnchor);
 		let rigidBodyAnchor = commons.createAmmoRigidBody(shapeAnchor, anchorMesh, 0.4, 0.6, posAnchor, massAnchor);
@@ -104,6 +105,7 @@ export const flipperRight = {
 		//this.stickMesh.rotation.z = this.toRadians(45)
 		this.stickMesh.castShadow = true;
 		this.stickMesh.receiveShadow = true;
+
 		//AMMO, kube/stick:
 		let stickColShape =  new Ammo.btBoxShape( new Ammo.btVector3( sizeStick.y/2, sizeStick.x/2, sizeStick.z/2 ) );
 		this.rbStick = commons.createAmmoRigidBody(stickColShape, this.stickMesh, 1, 0.3, posStick, massStick);
@@ -135,8 +137,8 @@ export const flipperRight = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(-48);
-		let upperLimit = this.toRadians(50);
+		let lowerLimit = this.toRadians(-30);
+		let upperLimit = this.toRadians(30);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;

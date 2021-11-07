@@ -338,9 +338,9 @@ export const board= {
         //middle Right Rectangle 2
         this.addAmmo(middleRightRectangleMesh2, this.middleRightRectangleRigidBody2, groupMesh, 0.1, 0.3, position, mass, setCollisionMask);
         //lower Left Rectangle
-        this.addAmmo(lowerLeftRectangleMesh, this.lowerLeftRectangleRigidBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(lowerLeftRectangleMesh, this.lowerLeftRectangleRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
         //lower Right Rectangle
-        this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 0.05   , 0.3, position, mass, setCollisionMask);
+        this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 3   , 0.3, position, mass, setCollisionMask);
 
         //heart Shape
         this.addAmmo(heartMesh, this.heartShapeRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);

@@ -135,8 +135,8 @@ export const flipperLeft = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(-48);
-		let upperLimit = this.toRadians(50);
+		let lowerLimit = this.toRadians(-30);
+		let upperLimit = this.toRadians(30);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;
