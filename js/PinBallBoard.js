@@ -49,6 +49,11 @@ export const pinBallBoard = {
         this.keyCheck(deltaTime);
         //Oppdaterer grafikken:
         myThreeScene.updateGraphics(deltaTime);
+
+        //Lager ny ball på startposisjon når ballen havner i bunnen
+        if(ball.mesh.position.z > 140 && ball.mesh.position.x < 80){
+             ball.create();
+        }
        },
 
     keyCheck(elapsed) {
