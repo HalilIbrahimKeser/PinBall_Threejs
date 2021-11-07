@@ -41,7 +41,7 @@ export const flipperLeft = {
 	stickMesh: undefined,
 	rbStick: undefined,
 	boardRotAxis: {x: 1, y:0, z: 0},
-	boardRotAngle: 0.2,
+	boardRotAngle: 0.35,
 	IMPULSE_FORCE_STICK: 150,
 	threeDirectionVectorStick: undefined,
 
@@ -56,12 +56,12 @@ export const flipperLeft = {
 	},
 
 	create(setCollisionMask=true) {
-		let posStick = {x: -60, y: 0, z: 95};     // Cube
+		let posStick = {x: -60, y: -7, z: 95};     // Cube
 		let sizeStick = {x: 45, y: 1, z: 3, radiusTop : 1, radiusBottom : 3, height : 45,
 			radialSegments : 30, heightSegments : 1, openEnded : false, thetaStart : 0, thetaLength : 2*Math.PI};   // Størrelse på pinnen.
 		let massStick = 10;                     // Kuben/"stikka" festes til kula og skal kunne rotere. Må derfor ha masse.
 
-		let posAnchor = {x: -60, y: 0, z: 95};    // Sphere, forankringspunkt.
+		let posAnchor = {x: -60, y: -7, z: 95};    // Sphere, forankringspunkt.
 		let radiusAnchor = 4;                         // Størrelse på kula.
 		let massAnchor = 0;                     // Sphere, denne skal stå i ro.
 
@@ -79,7 +79,7 @@ export const flipperLeft = {
 		anchorMesh.receiveShadow = true;
 		//AMMO, kule:
 		let shapeAnchor = new Ammo.btSphereShape(radiusAnchor);
-		let rigidBodyAnchor = commons.createAmmoRigidBody(shapeAnchor, anchorMesh, 0.1, 0.6, posAnchor, massAnchor);
+		let rigidBodyAnchor = commons.createAmmoRigidBody(shapeAnchor, anchorMesh, 1, 0.6, posAnchor, massAnchor);
 		this.myPhysicsWorld.addPhysicsObject(
 			rigidBodyAnchor,
 			anchorMesh,
@@ -135,8 +135,8 @@ export const flipperLeft = {
 			false
 		);
 
-		let lowerLimit = this.toRadians(-30);
-		let upperLimit = this.toRadians(30);
+		let lowerLimit = this.toRadians(-40);
+		let upperLimit = this.toRadians(40);
 		let softness = 0.3;
 		let biasFactor = 1;
 		let relaxationFactor = 0.9;

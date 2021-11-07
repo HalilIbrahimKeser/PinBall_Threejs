@@ -291,7 +291,7 @@ export const board= {
 
 
         //Rotate board slightly for downward pull on the ball
-        groupMesh.rotation.x = this.toRadians(11.45)
+        groupMesh.rotation.x = this.toRadians(20)
 
 
         /**************Add Ammos********************************/
@@ -338,9 +338,9 @@ export const board= {
         //middle Right Rectangle 2
         this.addAmmo(middleRightRectangleMesh2, this.middleRightRectangleRigidBody2, groupMesh, 0.1, 0.3, position, mass, setCollisionMask);
         //lower Left Rectangle
-        this.addAmmo(lowerLeftRectangleMesh, this.lowerLeftRectangleRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(lowerLeftRectangleMesh, this.lowerLeftRectangleRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
         //lower Right Rectangle
-        this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 3   , 0.3, position, mass, setCollisionMask);
+        this.addAmmo(lowerRightRectangleMesh, this.lowerRightRectangleRigidBody, groupMesh, 1   , 0.3, position, mass, setCollisionMask);
 
         //heart Shape
         this.addAmmo(heartMesh, this.heartShapeRigidBody, groupMesh, 3, 0.3, position, mass, setCollisionMask);
@@ -436,7 +436,7 @@ export const board= {
 
         let transform2 = new Ammo.btTransform();
         transform2.setIdentity();
-        transform2.setOrigin( new Ammo.btVector3( 0, 0, 0 ) );
+        transform2.setOrigin( new Ammo.btVector3( 0, 0, 1 ) );
 
         let springConstraint = new Ammo.btGeneric6DofSpringConstraint(
             this.springConstraintBox1,
