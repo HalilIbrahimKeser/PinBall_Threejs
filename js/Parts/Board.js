@@ -315,8 +315,8 @@ export const board= {
         this.addAmmo(lowerRightConcaveMesh, this.lowerRightConcaveBody, groupMesh, 0.05, 0.3, position, mass, setCollisionMask);
 
         // Spring constraint
-        this.addAmmo(this.springCubeMesh1, this.springConstraintBox1, groupMesh, 0.1, 0.3, position, mass, setCollisionMask);
-        this.addAmmo(this.springCubeMesh2, this.springConstraintBox2, groupMesh, 1, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(this.springCubeMesh1, this.springConstraintBox1, groupMesh, 0.5, 0.3, position, mass, setCollisionMask);
+        this.addAmmo(this.springCubeMesh2, this.springConstraintBox2, groupMesh, 2, 0.3, position, mass, setCollisionMask);
 
         //top Left Cylinder
         this.addAmmo(topLeftCylinderMesh, this.topLeftCylinderRigidBody, groupMesh, 1, 0.3, position, mass, setCollisionMask);
@@ -427,7 +427,7 @@ export const board= {
 
         // Rigid body
         this.springConstraintBox1 = commons.createAmmoRigidBody(boxShape, this.springCubeMesh1, 1, 0.3, sprConsSettings.pos1, sprConsSettings.mass1);
-        this.springConstraintBox2 = commons.createAmmoRigidBody(sphereShape, this.springCubeMesh2, 1, 0.3, sprConsSettings.pos2, sprConsSettings.mass2);
+        this.springConstraintBox2 = commons.createAmmoRigidBody(sphereShape, this.springCubeMesh2, 1.2, 0.3, sprConsSettings.pos2, sprConsSettings.mass2);
 
         //FJÆR MELLOM box1 og 2: https://stackoverflow.com/questions/46671809/how-to-make-a-spring-constraint-with-bullet-physics
         let transform1 = new Ammo.btTransform();
@@ -461,7 +461,7 @@ export const board= {
         springConstraint.enableSpring(1, true);
         springConstraint.enableSpring(2, true);    // Translation on z-axis
 
-        springConstraint.setStiffness(2, 60);
+        springConstraint.setStiffness(2, 30);
 
         springConstraint.setDamping(2, 0.01);
 
